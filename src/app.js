@@ -9,6 +9,9 @@ const {
   INDEX_FILE,
   URL_PREFIX
 } = require("./constants");
+const list = [];
+
+const todoHtml = fs.readFileSync("./src/templates/todo.html", "utf-8");
 
 const readUserDetails = () => {
   const userDetails = fs.readFileSync(USER_ACCOUNTS_FILE, "utf-8");
@@ -66,9 +69,25 @@ const handleSignUp = function(req, res) {
   redirect(res, "/loginPage");
 };
 
+const addItems = function(req, res) {
+  let currentToDOList = userDetails.accounts["user1"].TODOs.work.list;
+  currentToDOList.push(req.body);
+  updateAccountsFile(userDetails.accounts);
+  send(res, JSON.stringify(currentToDOList));
+};
+
+const serveTodoPage = function(req, res) {
+  let items = userDetails.accounts["user1"].TODOs.work.list;
+  let itemsHtml = items.map(item => `<li>${item}</li>`).join("");
+  let modifiedTodo = todoHtml.replace("###TODO_items###", itemsHtml);
+  send(res, modifiedTodo);
+};
+
 app.use(logRequest);
 app.use(readBody);
+app.get("/todo.html", serveTodoPage);
 app.post("/signUp", handleSignUp);
+app.post("/addItems", addItems);
 app.use(serveFile);
 
 module.exports = app.handleRequest.bind(app);

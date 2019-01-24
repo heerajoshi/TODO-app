@@ -4,7 +4,11 @@ class UserDetails {
   }
 
   addUser(newUser) {
-    this.accounts[newUser.userName] = { password: newUser.password };
+    this.accounts[newUser.userName] = {
+      password: newUser.password,
+      TODOs: { work: { discription: "MY todo", list: [] } }
+    };
   }
 }
+
 module.exports = UserDetails;

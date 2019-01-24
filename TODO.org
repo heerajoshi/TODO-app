@@ -7,6 +7,6 @@
 * DONE make user data class.
 * DONE maek a file that will store user data.
 * DONE make a constants file.
-* test, data 
-* Add more constants to res code.
-* add precommit.
+* DONE test, data 
+* DONE Add more constants to res code.
+* DONE add precommit.

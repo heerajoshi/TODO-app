@@ -31,6 +31,3 @@ describe("parseSignUpDetails", function() {
     assert.deepEqual(parseSignUpDetails(userDetail), expected);
   });
 });
-
-
-

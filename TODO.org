@@ -9,3 +9,4 @@
 * DONE make a constants file.
 * test, data 
 * Add more constants to res code.
+* add precommit.

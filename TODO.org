@@ -1,4 +1,11 @@
-* TODO start by making sing up 
+* DONE start by making sing up 
  ** first view then server then complete backend.
 * TODO review name app of sequenceRequestHandler.
 * TODO need to style sign up page.
+* TODO add test for testing the correct staus output.
+* TODO check user name availabilty function should be in app.
+* DONE make user data class.
+* DONE maek a file that will store user data.
+* DONE make a constants file.
+* test, data 
+* Add more constants to res code.

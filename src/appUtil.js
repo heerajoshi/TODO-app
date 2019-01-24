@@ -10,4 +10,15 @@ const send = (res, content, statusCode = 200) => {
   res.end();
 };
 
-module.exports = { isMatching, send };
+const parseSignUpDetails = signUpDetails => {
+  let args = {};
+  const splitKeyValue = pair => pair.split("=");
+  const assignKeyValueToArgs = ([key, value]) => (args[key] = value);
+  signUpDetails
+    .split("&")
+    .map(splitKeyValue)
+    .forEach(assignKeyValueToArgs);
+  return args;
+};
+
+module.exports = { isMatching, send, parseSignUpDetails };

@@ -1,0 +1,4 @@
+* TODO start by making sing up 
+ ** first view then server then complete backend.
+* TODO review name app of sequenceRequestHandler.
+* TODO need to style sign up page.

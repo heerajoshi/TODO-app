@@ -1,11 +1,1 @@
-{
-  "user1": {
-    "password": "hii",
-    "TODOs": {
-      "work": {
-        "discription": "MY todo",
-        "list": []
-      }
-    }
-  }
-}
+  {"user1":{"password":"sdfjkldsjf","todoList":{"list":[{"tasks":["dfsfd","fsdd","fdsfs"]},{"title":"fsdf","description":"++++++++fdsds","list":[]},{"title":"fsdf","description":"++++++++fdsds","list":[]},{"title":"fdsfds","description":"++++++++fsdfds","list":[]},{"title":"kannu","description":"kljsdflksdlfk++++++++","list":[]}]}}}

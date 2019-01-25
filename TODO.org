@@ -12,5 +12,7 @@
 * DONE add precommit.
 -----------------------------------------
 * DONE index.html--- dummy login , link sign up and createTodo link to todo page.
-* move data structure to classes.
+* TODO move data structure to classes.
+* TODO make a dashboard which allows us to add a todo
+* TODO review html clases and ids name.
 ----------------------------------------

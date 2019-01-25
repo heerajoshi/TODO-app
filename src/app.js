@@ -1,7 +1,7 @@
 const fs = require("fs");
 const { ReqSequenceHandler } = require("./req_sequence_handler");
 const { send, parseSignUpDetails } = require("./appUtil");
-const UserDetails = require("./userDetail");
+const { UserDetails, TodoList } = require("./userDetail");
 const {
   USER_ACCOUNTS_FILE,
   REDIRECT_STATUS,
@@ -9,7 +9,6 @@ const {
   INDEX_FILE,
   URL_PREFIX
 } = require("./constants");
-const list = [];
 
 const todoHtml = fs.readFileSync("./src/templates/todo.html", "utf-8");
 
@@ -63,22 +62,32 @@ const redirect = function(res, url) {
 };
 
 const handleSignUp = function(req, res) {
-  let newUser = parseSignUpDetails(req.body);
-  userDetails.addUser(newUser);
+  const todoList = new TodoList();
+  const newUser = parseSignUpDetails(req.body);
+  userDetails.addUser(newUser, todoList);
   updateAccountsFile(userDetails.accounts);
   redirect(res, "/loginPage");
 };
 
-const addItems = function(req, res) {
-  let currentToDOList = userDetails.accounts["user1"].TODOs.work.list;
-  currentToDOList.push(req.body);
+const addTodo = function(req, res) {
+  let todo = parseSignUpDetails(req.body);
+  todo.list = [];
+  userDetails.addTodo("user1", todo);
   updateAccountsFile(userDetails.accounts);
-  send(res, JSON.stringify(currentToDOList));
+  serveTodoPage(req, res);
+};
+
+const addItems = function(req, res) {
+  let currentTodoTasks = userDetails.getTodo("user1", 0).tasks;
+  currentTodoTasks.push(req.body);
+  updateAccountsFile(userDetails.accounts);
+  send(res, JSON.stringify(currentTodoTasks));
 };
 
 const serveTodoPage = function(req, res) {
-  let items = userDetails.accounts["user1"].TODOs.work.list;
-  let itemsHtml = items.map(item => `<li>${item}</li>`).join("");
+  let tasks = userDetails.getTodo("user1", 0).tasks;
+  console.log(tasks, "taskss");
+  let itemsHtml = tasks.map(item => `<li>${item}</li>`).join("");
   let modifiedTodo = todoHtml.replace("###TODO_items###", itemsHtml);
   send(res, modifiedTodo);
 };
@@ -88,6 +97,7 @@ app.use(readBody);
 app.get("/todo.html", serveTodoPage);
 app.post("/signUp", handleSignUp);
 app.post("/addItems", addItems);
+app.post("/addTodo", addTodo);
 app.use(serveFile);
 
 module.exports = app.handleRequest.bind(app);

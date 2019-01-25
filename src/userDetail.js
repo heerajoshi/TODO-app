@@ -3,12 +3,42 @@ class UserDetails {
     this.accounts = userAccounts;
   }
 
-  addUser(newUser) {
+  addUser(newUser, todoList) {
     this.accounts[newUser.userName] = {
       password: newUser.password,
-      TODOs: { work: { discription: "MY todo", list: [] } }
+      todoList: todoList
     };
+  }
+
+  getTodoList(userId) {
+    return this.accounts[userId].todoList.list;
+  }
+
+  getTodo(userId, todoIndex) {
+    return this.getTodoList(userId)[todoIndex];
+  }
+
+  addTodo(userId, todo) {
+    this.accounts[userId].todoList.list.push(todo);
   }
 }
 
-module.exports = UserDetails;
+class TodoList {
+  constructor() {
+    this.list = [];
+  }
+
+  addTodo(todo) {
+    this.list.push(todo);
+  }
+}
+
+// class todo {
+//   constructor(title, discription) {
+//     this.title = title;
+//     this.discription = discription;
+//   }
+//   addTodo() {}
+// }
+
+module.exports = { UserDetails, TodoList };

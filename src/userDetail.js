@@ -19,13 +19,13 @@ class UserDetails {
   }
 
   addTodo(userId, todo) {
-    this.accounts[userId].todoList.list.push(todo);
+    this.accounts[userId].todoList.addTodo(todo);
   }
 }
 
 class TodoList {
-  constructor() {
-    this.list = [];
+  constructor(list) {
+    this.list = list;
   }
 
   addTodo(todo) {

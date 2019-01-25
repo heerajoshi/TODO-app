@@ -3,7 +3,7 @@ const { TodoList } = require("../src/userDetail");
 
 describe("todoList", function() {
   beforeEach(() => {
-    todoList = new TodoList();
+    todoList = new TodoList([]);
   });
 
   describe("todoList.add", function() {

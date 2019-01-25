@@ -37,7 +37,7 @@ describe("UserDetails", function() {
   describe("UserDetails.addTodo", function() {
     it("should update the todotasks with provided todo", function() {
       const newUser = { userName: "user1", password: "1234" };
-      const todoList = new TodoList();
+      const todoList = new TodoList([]);
       const todo = { title: "work", description: "office", tasks: [] };
 
       userDetails.addUser(newUser, todoList);

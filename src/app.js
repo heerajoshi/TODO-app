@@ -17,8 +17,14 @@ const readUserDetails = () => {
   return JSON.parse(userDetails);
 };
 
-const app = new ReqSequenceHandler();
-const userDetails = new UserDetails(readUserDetails());
+const loadInstances = function() {
+  Object.keys(userDetails.accounts).forEach(userId => {
+    console.log(userDetails.accounts[userId]);
+    userDetails.accounts[userId].todoList = new TodoList(
+      userDetails.accounts[userId].todoList.list
+    );
+  });
+};
 
 const logRequest = function(req, res, next) {
   console.log(req.url, req.method);
@@ -62,7 +68,7 @@ const redirect = function(res, url) {
 };
 
 const handleSignUp = function(req, res) {
-  const todoList = new TodoList();
+  const todoList = new TodoList([]);
   const newUser = parseSignUpDetails(req.body);
   userDetails.addUser(newUser, todoList);
   updateAccountsFile(userDetails.accounts);
@@ -71,7 +77,7 @@ const handleSignUp = function(req, res) {
 
 const addTodo = function(req, res) {
   let todo = parseSignUpDetails(req.body);
-  todo.list = [];
+  todo.tasks = [];
   userDetails.addTodo("user1", todo);
   updateAccountsFile(userDetails.accounts);
   serveTodoPage(req, res);
@@ -86,11 +92,14 @@ const addItems = function(req, res) {
 
 const serveTodoPage = function(req, res) {
   let tasks = userDetails.getTodo("user1", 0).tasks;
-  console.log(tasks, "taskss");
   let itemsHtml = tasks.map(item => `<li>${item}</li>`).join("");
   let modifiedTodo = todoHtml.replace("###TODO_items###", itemsHtml);
   send(res, modifiedTodo);
 };
+
+const app = new ReqSequenceHandler();
+const userDetails = new UserDetails(readUserDetails());
+loadInstances();
 
 app.use(logRequest);
 app.use(readBody);

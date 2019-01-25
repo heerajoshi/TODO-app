@@ -2,7 +2,7 @@
  ** first view then server then complete backend.
 * TODO review name app of sequenceRequestHandler.
 * TODO need to style sign up page.
-* TODO add test for testing the correct staus output.
+* DONE add test for testing the correct staus output.
 * TODO check user name availabilty function should be in app.
 * DONE make user data class.
 * DONE maek a file that will store user data.
@@ -10,3 +10,7 @@
 * DONE test, data 
 * DONE Add more constants to res code.
 * DONE add precommit.
+-----------------------------------------
+* DONE index.html--- dummy login , link sign up and createTodo link to todo page.
+* move data structure to classes.
+----------------------------------------

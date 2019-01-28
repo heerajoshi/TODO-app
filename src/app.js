@@ -1,6 +1,6 @@
 const fs = require("fs");
 const { ReqSequenceHandler } = require("./req_sequence_handler");
-const { send, parseSignUpDetails } = require("./appUtil");
+const { send, parseSignUpDetails, parseTitleId } = require("./appUtil");
 const { Users, TodoList } = require("./users");
 const {
   USER_ACCOUNTS_FILE,
@@ -10,7 +10,10 @@ const {
   TODO_TEMPLATE,
   HOME_PAGE,
   DASHBOARD_TEMPLATE,
-  UTF8
+  UTF8,
+  TODO_ID,
+  TODO_ITEMS,
+  INVALID_PASSWORD
 } = require("./constants");
 
 const todoHtml = fs.readFileSync(TODO_TEMPLATE, UTF8);
@@ -78,9 +81,9 @@ const addTodo = function(req, res) {
   let todo = parseSignUpDetails(req.body);
   todo.tasks = [];
   users.addTodo("user1", todo);
-  console.log(users.accounts);
   updateAccountsFile(users.accounts);
-  serveTodoPage(req, res, users.getTodoList.length - 1);
+  const newTodoId = users.getTodoList("user1").length - 1;
+  serveTodoPage(req, res, newTodoId);
 };
 
 /**
@@ -91,7 +94,6 @@ const addTodo = function(req, res) {
 
 const addItems = function(req, res) {
   const todoId = parseTitleId(req.url);
-  console.log(todoId);
   let currentTodoTasks = users.getTodo("user1", todoId).tasks;
   currentTodoTasks.push(req.body);
   updateAccountsFile(users.accounts);
@@ -106,16 +108,8 @@ const addItems = function(req, res) {
 
 const serveErrorMassage = function(req, res) {
   let error = `Invalid username or password`;
-  let renderedHomePage = homePage.replace("###invalid_password###", error);
+  let renderedHomePage = homePage.replace(INVALID_PASSWORD, error);
   send(res, renderedHomePage);
-};
-
-const createTitlesHtml = function(todoTitles) {
-  let id = 0;
-  const titlesHtml = todoTitles
-    .map(title => `<h3> ${title} <button id = ${id++} oncl></button></h3>`)
-    .join("");
-  return titlesHtml;
 };
 
 const serveDashBoard = function(req, res) {
@@ -144,19 +138,15 @@ const handleLogIn = function(req, res) {
 };
 
 const serveHomePage = function(req, res) {
-  let renderedHomePage = homePage.replace("###invalid_password###", "");
+  let renderedHomePage = homePage.replace(INVALID_PASSWORD, "");
   send(res, renderedHomePage);
-};
-
-const parseTitleId = function(url) {
-  return url.split("?")[1];
 };
 
 const serveTodoPage = function(req, res, todoId) {
   let tasks = users.getTodo("user1", todoId).tasks;
   let itemsHtml = tasks.map(item => `<li>${item}</li>`).join("");
-  let modifiedTodo = todoHtml.replace("###TODO_items###", itemsHtml);
-  modifiedTodo = modifiedTodo.replace("###id###", todoId);
+  let modifiedTodo = todoHtml.replace(TODO_ITEMS, itemsHtml);
+  modifiedTodo = modifiedTodo.replace(TODO_ID, todoId);
   send(res, modifiedTodo);
 };
 

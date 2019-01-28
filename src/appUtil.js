@@ -22,4 +22,8 @@ const parseSignUpDetails = signUpDetails => {
   return args;
 };
 
-module.exports = { isMatching, send, parseSignUpDetails };
+const parseTitleId = function(url) {
+  return url.split("?")[1];
+};
+
+module.exports = { isMatching, send, parseSignUpDetails, parseTitleId };

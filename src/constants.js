@@ -7,6 +7,9 @@ const TODO_TEMPLATE = "./src/templates/todo.html";
 const HOME_PAGE = "./public/index.html";
 const DASHBOARD_TEMPLATE = "./public/userDashboard.html";
 const UTF8 = "utf-8";
+const TODO_ID = "###id###";
+const TODO_ITEMS = "###TODO_items###";
+const INVALID_PASSWORD = "###invalid_password###";
 
 module.exports = {
   USER_ACCOUNTS_FILE,
@@ -17,5 +20,8 @@ module.exports = {
   TODO_TEMPLATE,
   HOME_PAGE,
   DASHBOARD_TEMPLATE,
-  UTF8
+  UTF8,
+  TODO_ID,
+  TODO_ITEMS,
+  INVALID_PASSWORD
 };

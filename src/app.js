@@ -78,8 +78,9 @@ const addTodo = function(req, res) {
   let todo = parseSignUpDetails(req.body);
   todo.tasks = [];
   users.addTodo("user1", todo);
+  console.log(users.accounts);
   updateAccountsFile(users.accounts);
-  serveTodoPage(req, res);
+  serveTodoPage(req, res, users.getTodoList.length - 1);
 };
 
 /**
@@ -89,7 +90,9 @@ const addTodo = function(req, res) {
  */
 
 const addItems = function(req, res) {
-  let currentTodoTasks = users.getTodo("user1", 0).tasks;
+  const todoId = parseTitleId(req.url);
+  console.log(todoId);
+  let currentTodoTasks = users.getTodo("user1", todoId).tasks;
   currentTodoTasks.push(req.body);
   updateAccountsFile(users.accounts);
   send(res, JSON.stringify(currentTodoTasks));
@@ -101,11 +104,22 @@ const addItems = function(req, res) {
  * @param {object} res - http response.
  */
 
-const serveTodoPage = function(req, res) {
-  let tasks = users.getTodo("user1", 0).tasks;
-  let itemsHtml = tasks.map(item => `<li>${item}</li>`).join("");
-  let modifiedTodo = todoHtml.replace("###TODO_items###", itemsHtml);
-  send(res, modifiedTodo);
+const serveErrorMassage = function(req, res) {
+  let error = `Invalid username or password`;
+  let renderedHomePage = homePage.replace("###invalid_password###", error);
+  send(res, renderedHomePage);
+};
+
+const createTitlesHtml = function(todoTitles) {
+  let id = 0;
+  const titlesHtml = todoTitles
+    .map(title => `<h3> ${title} <button id = ${id++} oncl></button></h3>`)
+    .join("");
+  return titlesHtml;
+};
+
+const serveDashBoard = function(req, res) {
+  send(res, userDashBoard);
 };
 
 const isValidUser = function(newUser) {
@@ -115,16 +129,15 @@ const isValidUser = function(newUser) {
   return false;
 };
 
-const serveErrorMassage = function(req, res) {
-  let error = `Invalid username or password`;
-  let renderedHomePage = homePage.replace("###invalid_password###", error);
-  send(res, renderedHomePage);
+const serveTodoTitles = function(req, res) {
+  const todoTitles = users.getTitles("user1");
+  send(res, JSON.stringify(todoTitles));
 };
 
 const handleLogIn = function(req, res) {
   const newUser = parseSignUpDetails(req.body);
   if (isValidUser(newUser)) {
-    send(res, userDashBoard);
+    serveDashBoard(req, res);
     return;
   }
   serveErrorMassage(req, res);
@@ -133,6 +146,23 @@ const handleLogIn = function(req, res) {
 const serveHomePage = function(req, res) {
   let renderedHomePage = homePage.replace("###invalid_password###", "");
   send(res, renderedHomePage);
+};
+
+const parseTitleId = function(url) {
+  return url.split("?")[1];
+};
+
+const serveTodoPage = function(req, res, todoId) {
+  let tasks = users.getTodo("user1", todoId).tasks;
+  let itemsHtml = tasks.map(item => `<li>${item}</li>`).join("");
+  let modifiedTodo = todoHtml.replace("###TODO_items###", itemsHtml);
+  modifiedTodo = modifiedTodo.replace("###id###", todoId);
+  send(res, modifiedTodo);
+};
+
+const openTodo = function(req, res) {
+  const titleId = parseTitleId(req.url);
+  serveTodoPage(req, res, titleId);
 };
 
 const app = new ReqSequenceHandler();
@@ -145,8 +175,10 @@ app.get("/", serveHomePage);
 app.get("/todo.html", serveTodoPage);
 app.post("/login", handleLogIn);
 app.post("/signUp", handleSignUp);
-app.post("/addItems", addItems);
+app.post(/\/addItems/, addItems);
 app.post("/addTodo", addTodo);
+app.post(/\/openTodo/, openTodo);
+app.get("/dashboard", serveTodoTitles);
 app.use(serveFile);
 
 module.exports = app.handleRequest.bind(app);

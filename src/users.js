@@ -21,6 +21,10 @@ class Users {
   addTodo(userId, todo) {
     this.accounts[userId].todoList.addTodo(todo);
   }
+
+  getTitles(userId) {
+    return this.getTodoList(userId).map(todo => todo.title);
+  }
 }
 
 class TodoList {

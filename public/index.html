@@ -6,7 +6,7 @@
   </head>
   <body>
     <div>###invalid_password###</div>
-    <form action="/login" method="POST">
+    <form action="/login" method="post">
       <label class="labelTag">User Name</label>
 
       <input type="text" name="userName" class="inputTag" /><br />
@@ -14,7 +14,7 @@
       <label class="labelTag">Password</label>
 
       <input type="password" name="password" class="inputTag" /> <br />
-      <button class="loginButton">Log In</button>
+      <button class="loginButton" id="login">Log In</button>
     </form>
     <p>New User? <a href="/signUp.html"> signUp</a></p>
     <a href="/todo.html"> open todo</a>

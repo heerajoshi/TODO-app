@@ -3,25 +3,25 @@
   <head>
     <title>TODO</title>
     <link rel="stylesheet" type="text/css" href="styleSheet.css" />
+    <script src="dashboard.js"></script>
   </head>
   <body>
-    <div>
-      <form method="POST" action="/addTodo">
-        <label>Add title </label>
-        <input type="text" name="title" id="item" required /><br />
-        <label>Add description </label>
-        <textarea
-          type="text"
-          name="description"
-          id="item"
-          rows="4"
-          cols="20"
-          required
-        >
-        </textarea>
-        <br />
-        <button id="addItem">AddTODO</button>
-      </form>
-    </div>
+    <form method="POST" action="/addTodo">
+      <label>Add title </label>
+      <input type="text" name="title" id="item" required /><br />
+      <label>Add description </label>
+      <textarea
+        type="text"
+        name="description"
+        id="item"
+        rows="4"
+        cols="20"
+        required
+      >
+      </textarea>
+      <br />
+      <button id="addItem">AddTODO</button>
+    </form>
+    <div id="titles"></div>
   </body>
 </html>

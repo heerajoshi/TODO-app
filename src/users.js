@@ -26,6 +26,10 @@ class Users {
     this.accounts[userId].todoList.deleteTodo(todoId);
   }
 
+  deleteItem(userId, todoId, itemId) {
+    this.getTodo(userId, todoId).tasks.splice(itemId, 1);
+  }
+
   getTitles(userId) {
     return this.getTodoList(userId).map(todo => todo.title);
   }

@@ -145,14 +145,17 @@ const serveHomePage = function(req, res) {
 };
 
 const serveTodoPage = function(req, res, todoId) {
-  let tasks = users.getTodo("user1", todoId).tasks;
-  let itemsHtml = tasks.map(item => `<li>${item}</li>`).join("");
   const todo = users.getTodo("user1", todoId);
-  let modifiedTodo = todoHtml.replace(TODO_ITEMS, itemsHtml);
-  modifiedTodo = modifiedTodo.replace(TODO_TITLE, todo.title);
+  let modifiedTodo = todoHtml.replace(TODO_TITLE, todo.title);
   modifiedTodo = modifiedTodo.replace(DESCRIPTION, todo.description);
   modifiedTodo = modifiedTodo.replace(TODO_ID, todoId);
   send(res, modifiedTodo);
+};
+
+const getTasks = function(req, res) {
+  const todoId = parseTitleId(req.url);
+  const tasks = users.getTodo("user1", todoId).tasks;
+  send(res, JSON.stringify(tasks));
 };
 
 const openTodo = function(req, res) {
@@ -164,6 +167,12 @@ const deleteTodo = function(req, res) {
   const titleId = parseTitleId(req.url);
   users.deleteTodo("user1", titleId);
   serveDashBoard(req, res);
+};
+
+const deleteItem = function(req, res) {
+  const { itemId, todoId } = parseSignUpDetails(req.body);
+  users.deleteItem("user1", todoId, itemId);
+  serveTodoPage(req, res, todoId);
 };
 
 const app = new ReqSequenceHandler();
@@ -180,7 +189,9 @@ app.post(/\/addItems/, addItems);
 app.post("/addTodo", addTodo);
 app.post(/\/openTodo/, openTodo);
 app.post(/\/deleteTodo/, deleteTodo);
+app.post("/deleteItem", deleteItem);
 app.get("/dashboard", serveTodoTitles);
+app.get(/\/getTasks/, getTasks);
 app.use(serveFile);
 
 module.exports = app.handleRequest.bind(app);

@@ -13,7 +13,9 @@ const {
   UTF8,
   TODO_ID,
   TODO_ITEMS,
-  INVALID_PASSWORD
+  INVALID_PASSWORD,
+  TODO_TITLE,
+  DESCRIPTION
 } = require("./constants");
 
 const todoHtml = fs.readFileSync(TODO_TEMPLATE, UTF8);
@@ -145,7 +147,10 @@ const serveHomePage = function(req, res) {
 const serveTodoPage = function(req, res, todoId) {
   let tasks = users.getTodo("user1", todoId).tasks;
   let itemsHtml = tasks.map(item => `<li>${item}</li>`).join("");
+  const todo = users.getTodo("user1", todoId);
   let modifiedTodo = todoHtml.replace(TODO_ITEMS, itemsHtml);
+  modifiedTodo = modifiedTodo.replace(TODO_TITLE, todo.title);
+  modifiedTodo = modifiedTodo.replace(DESCRIPTION, todo.description);
   modifiedTodo = modifiedTodo.replace(TODO_ID, todoId);
   send(res, modifiedTodo);
 };

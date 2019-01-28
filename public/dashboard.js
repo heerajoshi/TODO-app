@@ -4,9 +4,9 @@ const createDashboard = function(content) {
   const todoTitles = content
     .map(title => {
       id = id++;
-      return `<form action = '/openTodo?${id}' method = 'POST'>
+      return `<form action = '/openTodo?id=${id}' method = 'POST'>
         <p>${title}<button>Open</button></p></form>
-        <form action = '/deleteTodo?${id}' method = 'POST'>
+        <form action = '/deleteTodo?id=${id}' method = 'POST'>
         <button>Delete</button>
         </form>`;
     })

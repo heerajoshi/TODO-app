@@ -9,7 +9,7 @@ const updateTODO = function() {
   const item = document.getElementById("item").value;
   const todoId = document.getElementById("todoId").innerHTML;
 
-  fetch(`/addItems?${todoId}`, { method: "POST", body: item })
+  fetch(`/addItems?id=${todoId}`, { method: "POST", body: item })
     .then(response => response.text())
     .then(updateItemsDiv);
 };

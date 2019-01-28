@@ -23,7 +23,7 @@ const parseSignUpDetails = signUpDetails => {
 };
 
 const parseTitleId = function(url) {
-  return url.split("?")[1];
+  return url.split("=")[1];
 };
 
 module.exports = { isMatching, send, parseSignUpDetails, parseTitleId };

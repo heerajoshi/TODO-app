@@ -10,6 +10,8 @@ const UTF8 = "utf-8";
 const TODO_ID = "###id###";
 const TODO_ITEMS = "###TODO_items###";
 const INVALID_PASSWORD = "###invalid_password###";
+const TODO_TITLE = "###title###";
+const DESCRIPTION = "###description###";
 
 module.exports = {
   USER_ACCOUNTS_FILE,
@@ -23,5 +25,7 @@ module.exports = {
   UTF8,
   TODO_ID,
   TODO_ITEMS,
-  INVALID_PASSWORD
+  INVALID_PASSWORD,
+  TODO_TITLE,
+  DESCRIPTION
 };

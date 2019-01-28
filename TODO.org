@@ -16,3 +16,6 @@
 * TODO make a dashboard which allows us to add a todo
 * TODO review html clases and ids name.
 ----------------------------------------
+
+* TODO move msg to constant
+* TODO move validation to class.

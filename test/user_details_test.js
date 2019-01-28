@@ -1,13 +1,13 @@
 const assert = require("assert");
-const { UserDetails, TodoList } = require("../src/userDetail");
+const { Users, TodoList } = require("../src/users");
 
-describe("UserDetails", function() {
+describe("Users", function() {
   beforeEach(() => {
-    userDetails = new UserDetails({});
+    userDetails = new Users({});
   });
 
-  describe("UserDetails.add", function() {
-    it("should update the UserDetails with newUser and its todoList", function() {
+  describe("Users.add", function() {
+    it("should update the Users with newUser and its todoList", function() {
       const newUser = { userName: "user1", password: "1234" };
       const todoList = {};
       const expectedDetails = {
@@ -23,7 +23,7 @@ describe("UserDetails", function() {
     });
   });
 
-  describe("UserDetails.getTodoList", function() {
+  describe("Users.getTodoList", function() {
     it("should return  todo list of specified user", function() {
       const newUser = { userName: "user1", password: "1234" };
       const todoList = { list: [] };
@@ -34,7 +34,7 @@ describe("UserDetails", function() {
     });
   });
 
-  describe("UserDetails.addTodo", function() {
+  describe("Users.addTodo", function() {
     it("should update the todotasks with provided todo", function() {
       const newUser = { userName: "user1", password: "1234" };
       const todoList = new TodoList([]);

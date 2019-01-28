@@ -1,27 +1,31 @@
 const fs = require("fs");
 const { ReqSequenceHandler } = require("./req_sequence_handler");
 const { send, parseSignUpDetails } = require("./appUtil");
-const { UserDetails, TodoList } = require("./userDetail");
+const { Users, TodoList } = require("./users");
 const {
   USER_ACCOUNTS_FILE,
-  REDIRECT_STATUS,
   FILE_NOT_FOUND_STATUS,
   INDEX_FILE,
-  URL_PREFIX
+  URL_PREFIX,
+  TODO_TEMPLATE,
+  HOME_PAGE,
+  DASHBOARD_TEMPLATE,
+  UTF8
 } = require("./constants");
 
-const todoHtml = fs.readFileSync("./src/templates/todo.html", "utf-8");
+const todoHtml = fs.readFileSync(TODO_TEMPLATE, UTF8);
+const homePage = fs.readFileSync(HOME_PAGE, UTF8);
+const userDashBoard = fs.readFileSync(DASHBOARD_TEMPLATE, UTF8);
 
 const readUserDetails = () => {
-  const userDetails = fs.readFileSync(USER_ACCOUNTS_FILE, "utf-8");
-  return JSON.parse(userDetails);
+  const users = fs.readFileSync(USER_ACCOUNTS_FILE, UTF8);
+  return JSON.parse(users);
 };
 
 const loadInstances = function() {
-  Object.keys(userDetails.accounts).forEach(userId => {
-    console.log(userDetails.accounts[userId]);
-    userDetails.accounts[userId].todoList = new TodoList(
-      userDetails.accounts[userId].todoList.list
+  Object.keys(users.accounts).forEach(userId => {
+    users.accounts[userId].todoList = new TodoList(
+      users.accounts[userId].todoList.list
     );
   });
 };
@@ -57,53 +61,89 @@ const serveFile = function(req, res) {
   });
 };
 
-const updateAccountsFile = function(userDetails) {
-  fs.writeFile(USER_ACCOUNTS_FILE, JSON.stringify(userDetails), error => {});
-};
-
-const redirect = function(res, url) {
-  res.statusCode = REDIRECT_STATUS;
-  res.setHeader("location", url);
-  res.end();
+const updateAccountsFile = function(users) {
+  fs.writeFile(USER_ACCOUNTS_FILE, JSON.stringify(users), error => {});
 };
 
 const handleSignUp = function(req, res) {
   const todoList = new TodoList([]);
   const newUser = parseSignUpDetails(req.body);
-  userDetails.addUser(newUser, todoList);
-  updateAccountsFile(userDetails.accounts);
-  redirect(res, "/loginPage");
+  userName = newUser.userName;
+  users.addUser(newUser, todoList);
+  updateAccountsFile(users.accounts);
+  serveHomePage(req, res);
 };
 
 const addTodo = function(req, res) {
   let todo = parseSignUpDetails(req.body);
   todo.tasks = [];
-  userDetails.addTodo("user1", todo);
-  updateAccountsFile(userDetails.accounts);
+  users.addTodo("user1", todo);
+  updateAccountsFile(users.accounts);
   serveTodoPage(req, res);
 };
 
+/**
+ * add items to tasks
+ * @param {object} req - http request.
+ * @param {object} res - http response.
+ */
+
 const addItems = function(req, res) {
-  let currentTodoTasks = userDetails.getTodo("user1", 0).tasks;
+  let currentTodoTasks = users.getTodo("user1", 0).tasks;
   currentTodoTasks.push(req.body);
-  updateAccountsFile(userDetails.accounts);
+  updateAccountsFile(users.accounts);
   send(res, JSON.stringify(currentTodoTasks));
 };
 
+/**
+ *Serves the todo page at 'todo.html' as request's url
+ * @param {object} req - http request.
+ * @param {object} res - http response.
+ */
+
 const serveTodoPage = function(req, res) {
-  let tasks = userDetails.getTodo("user1", 0).tasks;
+  let tasks = users.getTodo("user1", 0).tasks;
   let itemsHtml = tasks.map(item => `<li>${item}</li>`).join("");
   let modifiedTodo = todoHtml.replace("###TODO_items###", itemsHtml);
   send(res, modifiedTodo);
 };
 
+const isValidUser = function(newUser) {
+  if (users.accounts[newUser.userName]) {
+    return users.accounts[newUser.userName].password === newUser.password;
+  }
+  return false;
+};
+
+const serveErrorMassage = function(req, res) {
+  let error = `Invalid username or password`;
+  let renderedHomePage = homePage.replace("###invalid_password###", error);
+  send(res, renderedHomePage);
+};
+
+const handleLogIn = function(req, res) {
+  const newUser = parseSignUpDetails(req.body);
+  if (isValidUser(newUser)) {
+    send(res, userDashBoard);
+    return;
+  }
+  serveErrorMassage(req, res);
+};
+
+const serveHomePage = function(req, res) {
+  let renderedHomePage = homePage.replace("###invalid_password###", "");
+  send(res, renderedHomePage);
+};
+
 const app = new ReqSequenceHandler();
-const userDetails = new UserDetails(readUserDetails());
+const users = new Users(readUserDetails());
 loadInstances();
 
 app.use(logRequest);
 app.use(readBody);
+app.get("/", serveHomePage);
 app.get("/todo.html", serveTodoPage);
+app.post("/login", handleLogIn);
 app.post("/signUp", handleSignUp);
 app.post("/addItems", addItems);
 app.post("/addTodo", addTodo);

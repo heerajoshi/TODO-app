@@ -1,4 +1,4 @@
-class UserDetails {
+class Users {
   constructor(userAccounts) {
     this.accounts = userAccounts;
   }
@@ -41,4 +41,4 @@ class TodoList {
 //   addTodo() {}
 // }
 
-module.exports = { UserDetails, TodoList };
+module.exports = { Users, TodoList };

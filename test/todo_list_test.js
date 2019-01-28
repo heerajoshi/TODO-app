@@ -1,5 +1,5 @@
 const assert = require("assert");
-const { TodoList } = require("../src/userDetail");
+const { TodoList } = require("../src/users");
 
 describe("todoList", function() {
   beforeEach(() => {

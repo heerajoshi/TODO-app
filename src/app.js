@@ -155,6 +155,12 @@ const openTodo = function(req, res) {
   serveTodoPage(req, res, titleId);
 };
 
+const deleteTodo = function(req, res) {
+  const titleId = parseTitleId(req.url);
+  users.deleteTodo("user1", titleId);
+  serveDashBoard(req, res);
+};
+
 const app = new ReqSequenceHandler();
 const users = new Users(readUserDetails());
 loadInstances();
@@ -168,6 +174,7 @@ app.post("/signUp", handleSignUp);
 app.post(/\/addItems/, addItems);
 app.post("/addTodo", addTodo);
 app.post(/\/openTodo/, openTodo);
+app.post(/\/deleteTodo/, deleteTodo);
 app.get("/dashboard", serveTodoTitles);
 app.use(serveFile);
 

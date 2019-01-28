@@ -22,6 +22,10 @@ class Users {
     this.accounts[userId].todoList.addTodo(todo);
   }
 
+  deleteTodo(userId, todoId) {
+    this.accounts[userId].todoList.deleteTodo(todoId);
+  }
+
   getTitles(userId) {
     return this.getTodoList(userId).map(todo => todo.title);
   }
@@ -34,6 +38,10 @@ class TodoList {
 
   addTodo(todo) {
     this.list.push(todo);
+  }
+
+  deleteTodo(todoId) {
+    this.list.splice(todoId, 1);
   }
 }
 

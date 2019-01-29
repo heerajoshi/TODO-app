@@ -10,6 +10,13 @@ class Users {
     };
   }
 
+  isUserValid(newUser) {
+    if (this.accounts[newUser.userName]) {
+      return this.accounts[newUser.userName].password === newUser.password;
+    }
+    return false;
+  }
+
   getTodoList(userId) {
     return this.accounts[userId].todoList.list;
   }
@@ -18,8 +25,19 @@ class Users {
     return this.getTodoList(userId)[todoIndex];
   }
 
+  getId(userId) {
+    const latestId = this.getTodoList(userId).length;
+    let newId = 0;
+    if (latestId) {
+      let latestTodo = this.getTodo(userId, latestId - 1);
+      newId = latestTodo.id + 1;
+    }
+    return newId;
+  }
+
   addTodo(userId, todo) {
-    this.accounts[userId].todoList.addTodo(todo);
+    const id = this.getId(userId);
+    this.accounts[userId].todoList.addTodo(todo, id);
   }
 
   deleteTodo(userId, todoId) {
@@ -35,20 +53,6 @@ class Users {
   }
 }
 
-class TodoList {
-  constructor(list) {
-    this.list = list;
-  }
-
-  addTodo(todo) {
-    this.list.push(todo);
-  }
-
-  deleteTodo(todoId) {
-    this.list.splice(todoId, 1);
-  }
-}
-
 // class todo {
 //   constructor(title, discription) {
 //     this.title = title;
@@ -57,4 +61,4 @@ class TodoList {
 //   addTodo() {}
 // }
 
-module.exports = { Users, TodoList };
+module.exports = { Users };

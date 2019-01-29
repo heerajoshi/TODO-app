@@ -11,7 +11,7 @@ const send = (res, content, statusCode = 200) => {
   res.end();
 };
 
-const parseSignUpDetails = signUpDetails => {
+const readParameters = signUpDetails => {
   let args = {};
   const splitKeyValue = pair => pair.split("=");
   const assignKeyValueToArgs = ([key, value]) => (args[key] = value);
@@ -26,4 +26,4 @@ const parseTitleId = function(url) {
   return url.split("=")[1];
 };
 
-module.exports = { isMatching, send, parseSignUpDetails, parseTitleId };
+module.exports = { isMatching, send, readParameters, parseTitleId };

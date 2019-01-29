@@ -4,19 +4,32 @@
     <title>TODO</title>
     <link rel="stylesheet" type="text/css" href="styleSheet.css" />
   </head>
-  <body>
-    <div>###invalid_password###</div>
-    <form action="/login" method="post">
-      <label class="labelTag">User Name</label>
-
-      <input type="text" name="userName" class="inputTag" /><br />
-
-      <label class="labelTag">Password</label>
-
-      <input type="password" name="password" class="inputTag" /> <br />
-      <button class="loginButton" id="login">Log In</button>
-    </form>
-    <p>New User? <a href="/signUp.html"> signUp</a></p>
-    <a href="/userDashboard.html"> open User Dashboard</a>
+  <body class="backgroundImage">
+    <h1 style="text-align:center">Welcome to TODO</h1>
+    <div class="loginForm">
+      <div>###invalid_password###</div>
+      <form action="/login" method="post">
+        <div class="inputDiv">
+          <input
+            type="text"
+            name="userName"
+            class="inputTag"
+            placeholder="username"
+          /><br />
+          <input
+            type="password"
+            name="password"
+            class="inputTag"
+            placeholder="password"
+          />
+          <br />
+        </div>
+        <button class="loginButton" id="login">Log In</button>
+      </form>
+      <div class="newUser">
+        <p>Don't have an account?</p>
+        <a href="/signUp.html"> SIGN UP NOW</a>
+      </div>
+    </div>
   </body>
 </html>

@@ -1,7 +1,8 @@
 const fs = require("fs");
-const { ReqSequenceHandler } = require("./req_sequence_handler");
-const { send, parseSignUpDetails, parseTitleId } = require("./appUtil");
-const { Users, TodoList } = require("./users");
+const { ReqSequenceHandler } = require("./express");
+const { send, readParameters, parseTitleId } = require("./appUtil");
+const { Users } = require("./users");
+const { TodoList } = require("./todoList");
 const {
   USER_ACCOUNTS_FILE,
   FILE_NOT_FOUND_STATUS,
@@ -12,7 +13,6 @@ const {
   DASHBOARD_TEMPLATE,
   UTF8,
   TODO_ID,
-  TODO_ITEMS,
   INVALID_PASSWORD,
   TODO_TITLE,
   DESCRIPTION
@@ -72,7 +72,7 @@ const updateAccountsFile = function(users) {
 
 const handleSignUp = function(req, res) {
   const todoList = new TodoList([]);
-  const newUser = parseSignUpDetails(req.body);
+  const newUser = readParameters(req.body);
   userName = newUser.userName;
   users.addUser(newUser, todoList);
   updateAccountsFile(users.accounts);
@@ -80,7 +80,7 @@ const handleSignUp = function(req, res) {
 };
 
 const addTodo = function(req, res) {
-  let todo = parseSignUpDetails(req.body);
+  let todo = readParameters(req.body);
   todo.tasks = [];
   users.addTodo("user1", todo);
   updateAccountsFile(users.accounts);
@@ -94,7 +94,7 @@ const addTodo = function(req, res) {
  * @param {object} res - http response.
  */
 
-const addItems = function(req, res) {
+const addTask = function(req, res) {
   const todoId = parseTitleId(req.url);
   let currentTodoTasks = users.getTodo("user1", todoId).tasks;
   currentTodoTasks.push(req.body);
@@ -118,21 +118,14 @@ const serveDashBoard = function(req, res) {
   send(res, userDashBoard);
 };
 
-const isValidUser = function(newUser) {
-  if (users.accounts[newUser.userName]) {
-    return users.accounts[newUser.userName].password === newUser.password;
-  }
-  return false;
-};
-
 const serveTodoTitles = function(req, res) {
-  const todoTitles = users.getTitles("user1");
-  send(res, JSON.stringify(todoTitles));
+  const todoList = users.getTodoList("user1");
+  send(res, JSON.stringify(todoList));
 };
 
 const handleLogIn = function(req, res) {
-  const newUser = parseSignUpDetails(req.body);
-  if (isValidUser(newUser)) {
+  const newUser = readParameters(req.body);
+  if (users.isUserValid(newUser)) {
     serveDashBoard(req, res);
     return;
   }
@@ -159,18 +152,20 @@ const getTasks = function(req, res) {
 };
 
 const openTodo = function(req, res) {
-  const titleId = parseTitleId(req.url);
+  const titleId = readParameters(req.body).id;
+  console.log(titleId);
   serveTodoPage(req, res, titleId);
 };
 
 const deleteTodo = function(req, res) {
-  const titleId = parseTitleId(req.url);
+  const titleId = readParameters(req.body).id;
   users.deleteTodo("user1", titleId);
   serveDashBoard(req, res);
+  updateAccountsFile(users.accounts);
 };
 
 const deleteItem = function(req, res) {
-  const { itemId, todoId } = parseSignUpDetails(req.body);
+  const { itemId, todoId } = readParameters(req.body);
   users.deleteItem("user1", todoId, itemId);
   serveTodoPage(req, res, todoId);
 };
@@ -185,10 +180,10 @@ app.get("/", serveHomePage);
 app.get("/todo.html", serveTodoPage);
 app.post("/login", handleLogIn);
 app.post("/signUp", handleSignUp);
-app.post(/\/addItems/, addItems);
+app.post(/\/addTask/, addTask);
 app.post("/addTodo", addTodo);
-app.post(/\/openTodo/, openTodo);
-app.post(/\/deleteTodo/, deleteTodo);
+app.post("/openTodo", openTodo);
+app.post("/deleteTodo", deleteTodo);
 app.post("/deleteItem", deleteItem);
 app.get("/dashboard", serveTodoTitles);
 app.get(/\/getTasks/, getTasks);

@@ -2,23 +2,104 @@
   text-align: center;
   width: 500px;
   height: 400px;
-  border: 5px solid green;
   padding: 25px;
-  margin: 0px auto;
-  background-color: grey;
+  margin: 70px auto;
+  background-color: rgb(34, 34, 34);
 }
 
 .inputTag {
   height: 20px;
   width: 200px;
-  margin: 10px;
+  margin: 10px 100px;
+  border-radius: 10px;
 }
+
 .labelTag {
   font-size: 20px;
 }
+
 .loginButton {
-  height: 50px;
+  height: 35px;
+  width: 250px;
+  font-size: 20px;
+  margin: 0px 80px;
+  background-color: rgb(228, 57, 103);
+  border-radius: 15px;
+}
+
+.loginForm {
+  width: 400px;
+  height: 400px;
+  border: solid white;
+  padding: 30px;
+  margin: 0px auto;
+  background-color: gray;
+}
+.header {
+  text-align: center;
+}
+.addTodo {
+  text-align: center;
+  padding: 20px;
+  margin: 10px;
+  width: 500px;
+  border: 1px solid black;
+}
+
+.newUser {
+  text-align: center;
+}
+
+.signupButton {
+  height: 30px;
   width: 100px;
   font-size: 20px;
   margin: 10px;
+  background-color: rgb(228, 57, 103);
+}
+
+.signupPage {
+  /* background-color: rgb(36, 53, 61); */
+}
+
+.inputDiv {
+  margin: 100px auto;
+}
+
+.dashBoard {
+  display: flex;
+}
+.titles {
+  align-content: center;
+  padding: 20px;
+  margin: 10px;
+  width: 500px;
+  border: 1px solid black;
+}
+.todo {
+  display: flex;
+}
+
+.todoPage {
+  display: flex;
+}
+
+.addTasks {
+  text-align: center;
+  padding: 20px;
+  margin: 10px;
+  width: 500px;
+  border: 1px solid black;
+}
+
+.tasks {
+  align-content: center;
+  padding: 20px;
+  margin: 10px;
+  width: 500px;
+  border: 1px solid black;
+}
+
+.task {
+  display: flex;
 }

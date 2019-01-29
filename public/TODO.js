@@ -6,10 +6,10 @@ const updateItemsDiv = function(items) {
   let list = jsonContent
     .map(
       item =>
-        `<li>${item}</li><form action = '/deleteItem' method = 'POST'>
+        `<div class = "task"><li>${item}</li><form action = '/deleteItem' method = 'POST'>
         <input type = hidden name = "itemId" value =${id++} ></input>
         <input type = hidden name = "todoId" value = ${todoId}></input>
-        <button>delete</button></form>`
+        <button>delete</button></form></div>`
     )
     .join("");
   itemsDiv.innerHTML = list;
@@ -19,7 +19,7 @@ const updateTODO = function() {
   const item = document.getElementById("item").value;
   const todoId = document.getElementById("todoId").innerHTML;
 
-  fetch(`/addItems?id=${todoId}`, { method: "POST", body: item })
+  fetch(`/addTask?id=${todoId}`, { method: "POST", body: item })
     .then(response => response.text())
     .then(updateItemsDiv);
 };

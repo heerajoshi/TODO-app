@@ -6,22 +6,30 @@
     <script src="dashboard.js"></script>
   </head>
   <body>
-    <form method="POST" action="/addTodo">
-      <label>Add title </label>
-      <input type="text" name="title" id="item" required /><br />
-      <label>Add description </label>
-      <textarea
-        type="text"
-        name="description"
-        id="item"
-        rows="4"
-        cols="20"
-        required
-      >
-      </textarea>
-      <br />
-      <button id="addItem">AddTODO</button>
-    </form>
-    <div id="titles"></div>
+    <div class="header"><h1>Dashboard</h1></div>
+    <div class="dashBoard">
+      <div class="addTodo">
+        <form method="POST" action="/addTodo">
+          <input
+            type="text"
+            name="title"
+            id="item"
+            placeholder="title"
+            required
+          /><br />
+          <textarea
+            name="description"
+            id="item"
+            rows="4"
+            cols="20"
+            placeholder="Description"
+          ></textarea>
+
+          <br />
+          <button id="addItem">AddTODO</button>
+        </form>
+      </div>
+      <div id="titles" class="titles"></div>
+    </div>
   </body>
 </html>

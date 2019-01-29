@@ -4,19 +4,25 @@
     <title>signUp</title>
     <link rel="stylesheet" type="text/css" href="styleSheet.css" />
   </head>
-  <body style="background-color:blue">
+  <body class="signupPage">
     <div class="signUpForm">
       <form action="/signUp" method="POST">
-        <label style="font-size:20px;">User Name</label>
+        <div class="inputDiv">
+        <input
+          type="text"
+          name="userName"
+          placeholder="User name"
+          class="inputTag"/>
+        <br />
 
-        <input type="text" name="userName" class="inputTeg" /><br />
-
-        <label style="font-size:20px">Password</label>
-
-        <input type="password" name="password" class="inputTeg" /> <br />
-        <button style="height:50px;width: 100px; font-size: 20px; margin: 10px">
-          Sign up
-        </button>
+        <input
+          type="password"
+          name="password"
+          class="inputTag"
+          placeholder="password"/>
+        <br />
+        <button class="signupButton">Sign up</button>
+      </div>
       </form>
     </div>
   </body>

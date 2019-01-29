@@ -43,6 +43,10 @@ class Users {
     const id = this.getId(userId);
     this.accounts[userId].todoList.addTodo(todo, id);
   }
+  addTask(userId, todoId, task) {
+    // console.log(task, this.getTodo(userId, todoId).id);
+    this.getTodo(userId, todoId).addTask(task);
+  }
 
   deleteTodo(userId, todoId) {
     this.accounts[userId].todoList.deleteTodo(todoId);
@@ -56,13 +60,5 @@ class Users {
     return this.getTodoList(userId).map(todo => todo.title);
   }
 }
-
-// class todo {
-//   constructor(title, discription) {
-//     this.title = title;
-//     this.discription = discription;
-//   }
-//   addTodo() {}
-// }
 
 module.exports = { Users };

@@ -31,9 +31,11 @@ const readUserDetails = () => {
 const loadInstances = function() {
   Object.keys(users.accounts).forEach(userId => {
     let newTodoList = new TodoList([]);
-    users.accounts[userId].todoList.list.forEach(todo =>
-      newTodoList.addTodo(todo, todo.id)
-    );
+    users.accounts[userId].todoList.list.forEach(todo => {
+      const newTodo = new Todo(todo);
+      todo.tasks.forEach(task => newTodo.addTask(task.description));
+      newTodoList.addTodo(newTodo, todo.id);
+    });
     users.addTodoList(userId, newTodoList);
   });
 };
@@ -70,7 +72,7 @@ const serveFile = function(req, res) {
 };
 
 const updateAccountsFile = function(users) {
-  fs.writeFile(USER_ACCOUNTS_FILE, JSON.stringify(users), error => {});
+  fs.writeFile(USER_ACCOUNTS_FILE, JSON.stringify(users, null, 2), error => {});
 };
 
 const handleSignUp = function(req, res) {
@@ -85,7 +87,6 @@ const handleSignUp = function(req, res) {
 const addTodo = function(req, res) {
   const todo = readParameters(req.body);
   todo.tasks = [];
-  // let todo = new Todo(todoDetails);
   users.addTodo("user1", todo);
   updateAccountsFile(users.accounts);
   const newTodoId = users.getTodoList("user1").length - 1;
@@ -100,10 +101,11 @@ const addTodo = function(req, res) {
 
 const addTask = function(req, res) {
   const todoId = parseTitleId(req.url);
-  let currentTodoTasks = users.getTodo("user1", todoId).tasks;
-  currentTodoTasks.push(req.body);
+  users.addTask("user1", todoId, req.body);
+  const currentTasks = users.getTodo("user1", todoId).tasks;
+  // console.log(currentTasks);
   updateAccountsFile(users.accounts);
-  send(res, JSON.stringify(currentTodoTasks));
+  send(res, JSON.stringify(currentTasks));
 };
 
 /**

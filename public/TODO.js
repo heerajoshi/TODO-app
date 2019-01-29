@@ -2,12 +2,13 @@ const updateItemsDiv = function(items) {
   const todoId = document.getElementById("todoId").innerHTML;
   const itemsDiv = document.getElementById("TODOItems");
   let jsonContent = JSON.parse(items);
-  let id = 0;
   let list = jsonContent
     .map(
-      item =>
-        `<div class = "task"><li>${item}</li><form action = '/deleteItem' method = 'POST'>
-        <input type = hidden name = "itemId" value =${id++} ></input>
+      task =>
+        `<div class = "task"><li>${
+          task.description
+        }</li><form action = '/deleteItem' method = 'POST'>
+        <input type = hidden name = "itemId" value =${task.id} ></input>
         <input type = hidden name = "todoId" value = ${todoId}></input>
         <button>delete</button></form></div>`
     )

@@ -1,6 +1,6 @@
 const fs = require("fs");
 const { ReqSequenceHandler } = require("./express");
-const { send, readParameters, parseTitleId } = require("./appUtil");
+const { send, readParameters, parseTitleId, redirect } = require("./appUtil");
 const { Users } = require("./users");
 const { TodoList } = require("./todoList");
 const { Todo } = require("./todo");
@@ -130,7 +130,7 @@ const serveTodoTitles = function(req, res) {
 const handleLogIn = function(req, res) {
   const newUser = readParameters(req.body);
   if (users.isUserValid(newUser)) {
-    serveDashBoard(req, res);
+    redirect(res, "/userDashboard.html", 302);
     return;
   }
   serveErrorMassage(req, res);
@@ -157,13 +157,15 @@ const getTasks = function(req, res) {
 
 const openTodo = function(req, res) {
   const titleId = readParameters(req.body).id;
+  console.log(titleId);
+
   serveTodoPage(req, res, titleId);
 };
 
 const deleteTodo = function(req, res) {
   const titleId = readParameters(req.body).id;
   users.deleteTodo("user1", titleId);
-  serveDashBoard(req, res);
+  redirect(res, "/userDashboard.html", 302);
   updateAccountsFile(users.accounts);
 };
 
@@ -182,14 +184,14 @@ app.use(logRequest);
 app.use(readBody);
 app.get("/", serveHomePage);
 app.get("/todo.html", serveTodoPage);
-app.post("/login", handleLogIn);
+app.post("/dashboard", handleLogIn);
 app.post("/signUp", handleSignUp);
 app.post(/\/addTask/, addTask);
 app.post("/addTodo", addTodo);
 app.post("/openTodo", openTodo);
 app.post("/deleteTodo", deleteTodo);
 app.post("/deleteItem", deleteItem);
-app.get("/dashboard", serveTodoTitles);
+app.get("/todoList", serveTodoTitles);
 app.get(/\/getTasks/, getTasks);
 app.use(serveFile);
 

@@ -10,7 +10,6 @@ class TodoList {
 
   deleteTodo(todoId) {
     this.list = this.list.filter(todo => todoId != todo.id);
-    console.log(this.list);
   }
 }
 

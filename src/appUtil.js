@@ -11,6 +11,12 @@ const send = (res, content, statusCode = 200) => {
   res.end();
 };
 
+const redirect = function(res, url, statusCode) {
+  res.setHeader("location", url);
+  res.statusCode = statusCode;
+  res.end();
+};
+
 const readParameters = signUpDetails => {
   let args = {};
   const splitKeyValue = pair => pair.split("=");
@@ -26,4 +32,4 @@ const parseTitleId = function(url) {
   return url.split("=")[1];
 };
 
-module.exports = { isMatching, send, readParameters, parseTitleId };
+module.exports = { isMatching, send, readParameters, parseTitleId, redirect };

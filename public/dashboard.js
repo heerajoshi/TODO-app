@@ -15,7 +15,7 @@ const createTodoListHtml = function(todo) {
 };
 
 const renderDashboard = function() {
-  fetch("/dashboard")
+  fetch("/todoList")
     .then(response => response.json())
     .then(createDashboard);
 };

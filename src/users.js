@@ -25,8 +25,8 @@ class Users {
     return this.accounts[userId].todoList.list;
   }
 
-  getTodo(userId, todoIndex) {
-    return this.getTodoList(userId)[todoIndex];
+  getTodo(userId, todoId) {
+    return this.getTodoList(userId).filter(todo => todo.id == todoId)[0];
   }
 
   getId(userId) {

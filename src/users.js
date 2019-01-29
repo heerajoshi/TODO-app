@@ -10,6 +10,10 @@ class Users {
     };
   }
 
+  addTodoList(userId, todoList) {
+    this.accounts[userId].todoList = todoList;
+  }
+
   isUserValid(newUser) {
     if (this.accounts[newUser.userName]) {
       return this.accounts[newUser.userName].password === newUser.password;

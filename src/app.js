@@ -3,6 +3,7 @@ const { ReqSequenceHandler } = require("./express");
 const { send, readParameters, parseTitleId } = require("./appUtil");
 const { Users } = require("./users");
 const { TodoList } = require("./todoList");
+const { Todo } = require("./todo");
 const {
   USER_ACCOUNTS_FILE,
   FILE_NOT_FOUND_STATUS,
@@ -29,9 +30,11 @@ const readUserDetails = () => {
 
 const loadInstances = function() {
   Object.keys(users.accounts).forEach(userId => {
-    users.accounts[userId].todoList = new TodoList(
-      users.accounts[userId].todoList.list
+    let newTodoList = new TodoList([]);
+    users.accounts[userId].todoList.list.forEach(todo =>
+      newTodoList.addTodo(todo, todo.id)
     );
+    users.addTodoList(userId, newTodoList);
   });
 };
 
@@ -80,8 +83,9 @@ const handleSignUp = function(req, res) {
 };
 
 const addTodo = function(req, res) {
-  let todo = readParameters(req.body);
+  const todo = readParameters(req.body);
   todo.tasks = [];
+  // let todo = new Todo(todoDetails);
   users.addTodo("user1", todo);
   updateAccountsFile(users.accounts);
   const newTodoId = users.getTodoList("user1").length - 1;
@@ -153,7 +157,6 @@ const getTasks = function(req, res) {
 
 const openTodo = function(req, res) {
   const titleId = readParameters(req.body).id;
-  console.log(titleId);
   serveTodoPage(req, res, titleId);
 };
 
@@ -168,6 +171,7 @@ const deleteItem = function(req, res) {
   const { itemId, todoId } = readParameters(req.body);
   users.deleteItem("user1", todoId, itemId);
   serveTodoPage(req, res, todoId);
+  // updateAccountsFile(users.accounts);
 };
 
 const app = new ReqSequenceHandler();

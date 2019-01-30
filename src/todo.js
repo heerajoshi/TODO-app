@@ -14,14 +14,13 @@ class Todo {
     this.tasks.push(taskObject);
   }
 
-  // markTask(taskId) {
-  //   this.tasks[taskId].status =
-  //   this.tasks.map(task => {
-  //     if (task.id == taskId) {
-  //       task.status = true;
-  //     }
-  //   });
-  // }
+  toggleStatus(taskId) {
+    this.tasks[taskId].status = !this.getStatus(taskId);
+  }
+
+  getStatus(taskId) {
+    return this.tasks[taskId].status;
+  }
 }
 
 module.exports = { Todo };

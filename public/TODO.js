@@ -1,6 +1,6 @@
 const createDiv = function(className, visibleData) {
   let mainDiv = document.createElement("div");
-  mainDiv.class = className;
+  mainDiv.className = className;
   mainDiv.innerHTML = visibleData;
   return mainDiv;
 };
@@ -27,31 +27,57 @@ const createButton = function(value) {
   return button;
 };
 
-const appendChild = function(parent, childs) {
+const toggleStatus = function(taskId) {
+  const todoId = document.getElementById("todoId").innerHTML;
+  const setStatusOnClick = setTaskStatus.bind(null, event.target);
+  fetch(`/toggleStatus?todoId=${todoId}&taskId=${taskId}`)
+    .then(response => response.text())
+    .then(setStatusOnClick);
+};
+
+const setTaskStatus = function(element, status) {
+  const textDecorations = { true: "line-through", false: "none" };
+  element.style.textDecoration = textDecorations[status];
+};
+
+const createDescriptionDiv = function(className, task, taskId) {
+  const descriptionDiv = document.createElement("button");
+  descriptionDiv.innerHTML = task.description;
+  descriptionDiv.id = taskId;
+  descriptionDiv.className = className;
+  setTaskStatus(descriptionDiv, task.status);
+  descriptionDiv.onclick = toggleStatus.bind(null, taskId);
+  return descriptionDiv;
+};
+
+const appendChildren = function(parent, childs) {
   childs.forEach(child => parent.appendChild(child));
+};
+
+const createElements = function(currentId, todoId, task) {
+  const mainDiv = createDiv("task", "");
+  const descriptionDiv = createDescriptionDiv("description", task, currentId);
+  const deleteForm = createDeleteForm();
+  const hiddenItemId = createHiddenInput("itemId", currentId);
+  const hiddenTodoId = createHiddenInput("todoId", todoId);
+  const button = createButton("delete");
+  appendChildren(deleteForm, [hiddenItemId, hiddenTodoId, button]);
+  appendChildren(mainDiv, [descriptionDiv, deleteForm]);
+  return mainDiv;
 };
 
 const updateItemsDiv = function(items) {
   const todoId = document.getElementById("todoId").innerHTML;
   const itemsDiv = document.getElementById("TODOItems");
+  itemsDiv.innerHTML = "";
   let jsonContent = JSON.parse(items);
   let id = 0;
-  let list = jsonContent
-    .map(task => {
-      let currentId = id++;
-      const mainDiv = createDiv("task", "");
-      const descriptionDiv = createDiv("description", task.description);
-      const deleteForm = createDeleteForm();
-      const hiddenItemId = createHiddenInput("itemId", currentId);
-      const hiddenTodoId = createHiddenInput("todoId", todoId);
-      const button = createButton("delete");
-      appendChild(deleteForm, [hiddenItemId, hiddenTodoId, button]);
-      appendChild(mainDiv, [descriptionDiv, deleteForm]);
-      return mainDiv.innerHTML;
-    })
-    .join("");
+  let list = jsonContent.map(task => {
+    let currentId = id++;
+    return createElements(currentId, todoId, task);
+  });
   document.getElementById("item").value = "";
-  itemsDiv.innerHTML = list;
+  appendChildren(itemsDiv, list);
 };
 
 const updateTODO = function() {

@@ -45,8 +45,12 @@ class Users {
     this.getTodo(userId, todoId).deleteTask(itemId);
   }
 
-  markItem(userId, todoId, itemId) {
-    this.getTodo(userId, todoId).markTask(itemId);
+  toggleStatus(userId, todoId, taskId) {
+    this.getTodo(userId, todoId).toggleStatus(taskId);
+  }
+
+  getStatus(userId, todoId, taskId) {
+    return this.getTodo(userId, todoId).getStatus(taskId);
   }
 
   getTitles(userId) {

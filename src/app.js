@@ -1,6 +1,12 @@
 const fs = require("fs");
 const { ReqSequenceHandler } = require("./express");
-const { send, readParameters, parseTitleId, redirect } = require("./appUtil");
+const {
+  send,
+  readParameters,
+  parseTitleId,
+  redirect,
+  parseUrl
+} = require("./appUtil");
 const { Users } = require("./users");
 const { TodoList } = require("./todoList");
 const { Todo } = require("./todo");
@@ -180,10 +186,12 @@ const deleteItem = function(req, res) {
 };
 
 const toggleStatus = function(req, res) {
-  const { itemId, todoId } = readParameters(req.body);
-  users.markItem("user1", todoId, itemId);
+  const { taskId, todoId } = parseUrl(req.url);
+  console.log(taskId, todoId);
+  users.toggleStatus("user1", todoId, taskId);
+  const currentStatus = users.getStatus("user1", todoId, taskId);
   updateAccountsFile(users.accounts);
-  serveTodoPage(req, res, todoId);
+  send(res, currentStatus.toString());
 };
 
 const app = new ReqSequenceHandler();
@@ -201,7 +209,7 @@ app.post("/addTodo", addTodo);
 app.post("/openTodo", openTodo);
 app.post("/deleteTodo", deleteTodo);
 app.post("/deleteItem", deleteItem);
-app.post("/checkStatus", toggleStatus);
+app.get(/\/toggleStatus/, toggleStatus);
 app.get("/todoList", serveTodoTitles);
 app.get(/\/getTasks/, getTasks);
 app.use(serveFile);

@@ -17,11 +17,11 @@ const redirect = function(res, url, statusCode) {
   res.end();
 };
 
-const readParameters = signUpDetails => {
+const readParameters = parameters => {
   let args = {};
   const splitKeyValue = pair => pair.split("=");
   const assignKeyValueToArgs = ([key, value]) => (args[key] = value);
-  signUpDetails
+  parameters
     .split("&")
     .map(splitKeyValue)
     .forEach(assignKeyValueToArgs);
@@ -32,4 +32,16 @@ const parseTitleId = function(url) {
   return +url.split("=")[1];
 };
 
-module.exports = { isMatching, send, readParameters, parseTitleId, redirect };
+const parseUrl = function(url) {
+  const args = url.split("?")[1];
+  return readParameters(args);
+};
+
+module.exports = {
+  isMatching,
+  send,
+  readParameters,
+  parseTitleId,
+  redirect,
+  parseUrl
+};

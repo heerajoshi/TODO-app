@@ -93,6 +93,10 @@ const addTodo = function(req, res) {
   serveTodoPage(req, res, newTodoId);
 };
 
+const decrypt = data => {
+  return unescape(data).replace(/\+/g, " ");
+};
+
 /**
  * add items to tasks
  * @param {object} req - http request.
@@ -144,8 +148,8 @@ const serveHomePage = function(req, res) {
 
 const serveTodoPage = function(req, res, todoId) {
   const todo = users.getTodo("user1", todoId);
-  let modifiedTodo = todoHtml.replace(TODO_TITLE, todo.title);
-  modifiedTodo = modifiedTodo.replace(DESCRIPTION, todo.description);
+  let modifiedTodo = todoHtml.replace(TODO_TITLE, decrypt(todo.title));
+  modifiedTodo = modifiedTodo.replace(DESCRIPTION, decrypt(todo.description));
   modifiedTodo = modifiedTodo.replace(TODO_ID, todoId);
   send(res, modifiedTodo);
 };

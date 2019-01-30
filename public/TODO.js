@@ -50,7 +50,7 @@ const updateItemsDiv = function(items) {
       return mainDiv.innerHTML;
     })
     .join("");
-  console.log(list);
+  document.getElementById("item").value = "";
   itemsDiv.innerHTML = list;
 };
 

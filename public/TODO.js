@@ -23,7 +23,7 @@ const createHiddenInput = function(name, id) {
 
 const createButton = function(value) {
   const button = document.createElement("button");
-  button.value = value;
+  button.innerHTML = value;
   return button;
 };
 
@@ -43,7 +43,7 @@ const updateItemsDiv = function(items) {
       const descriptionDiv = createDiv("description", task.description);
       const deleteForm = createDeleteForm();
       const hiddenItemId = createHiddenInput("itemId", currentId);
-      const hiddenTodoId = createHiddenInput("itemId", todoId);
+      const hiddenTodoId = createHiddenInput("todoId", todoId);
       const button = createButton("delete");
       appendChild(deleteForm, [hiddenItemId, hiddenTodoId, button]);
       appendChild(mainDiv, [descriptionDiv, deleteForm]);

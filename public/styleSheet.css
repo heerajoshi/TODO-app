@@ -4,14 +4,15 @@
   height: 400px;
   padding: 25px;
   margin: 70px auto;
-  background-color: rgb(34, 34, 34);
+  background-color: whitesmoke;
 }
 
 .inputTag {
+  padding: 5px;
   height: 20px;
   width: 200px;
   margin: 10px 100px;
-  border-radius: 10px;
+  border-radius: 5px;
 }
 
 .labelTag {
@@ -23,7 +24,7 @@
   width: 250px;
   font-size: 20px;
   margin: 0px 80px;
-  background-color: rgb(228, 57, 103);
+  background-color: greenyellow;
   border-radius: 15px;
 }
 
@@ -33,7 +34,7 @@
   border: solid white;
   padding: 30px;
   margin: 0px auto;
-  background-color: gray;
+  background: whitesmoke;
 }
 .header {
   text-align: center;
@@ -52,10 +53,11 @@
 
 .signupButton {
   height: 30px;
-  width: 100px;
+  width: 215px;
   font-size: 20px;
   margin: 10px;
-  background-color: rgb(228, 57, 103);
+  border-radius: 5px;
+  background-color: greenyellow;
 }
 
 .signupPage {
@@ -82,13 +84,13 @@
 
 .todoPage {
   display: flex;
+  flex-direction: column;
 }
 
 .addTasks {
   text-align: center;
   padding: 20px;
   margin: 10px;
-  width: 500px;
   border: 1px solid black;
 }
 
@@ -96,10 +98,36 @@
   align-content: center;
   padding: 20px;
   margin: 10px;
-  width: 500px;
   border: 1px solid black;
 }
 
 .task {
   display: flex;
+}
+
+.todo_details {
+  display: flex;
+  word-wrap: break-word;
+}
+
+input {
+  width: 250px;
+  padding: 10px;
+  height: 20px;
+  border: 1px solid black;
+  border-radius: 2px;
+  margin: 2px;
+}
+
+textarea {
+  width: 260px;
+  height: 50px;
+  border-radius: 2px;
+  margin: 2px;
+}
+
+button {
+  width: 100px;
+  height: 30px;
+  border-radius: 2px;
 }

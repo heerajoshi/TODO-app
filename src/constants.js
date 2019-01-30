@@ -12,6 +12,7 @@ const TODO_ITEMS = "###TODO_items###";
 const INVALID_PASSWORD = "###invalid_password###";
 const TODO_TITLE = "###title###";
 const DESCRIPTION = "###description###";
+const SIGNUP_PAGE = "./public/signUp.html";
 
 module.exports = {
   USER_ACCOUNTS_FILE,
@@ -27,5 +28,6 @@ module.exports = {
   TODO_ITEMS,
   INVALID_PASSWORD,
   TODO_TITLE,
-  DESCRIPTION
+  DESCRIPTION,
+  SIGNUP_PAGE
 };

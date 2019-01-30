@@ -22,11 +22,13 @@ const {
   TODO_ID,
   INVALID_PASSWORD,
   TODO_TITLE,
-  DESCRIPTION
+  DESCRIPTION,
+  SIGNUP_PAGE
 } = require("./constants");
 
 const todoHtml = fs.readFileSync(TODO_TEMPLATE, UTF8);
 const homePage = fs.readFileSync(HOME_PAGE, UTF8);
+const signupPage = fs.readFileSync(SIGNUP_PAGE, UTF8);
 const userDashBoard = fs.readFileSync(DASHBOARD_TEMPLATE, UTF8);
 
 const readUserDetails = () => {
@@ -87,7 +89,7 @@ const handleSignUp = function(req, res) {
   userName = newUser.userName;
   users.addUser(newUser, todoList);
   updateAccountsFile(users.accounts);
-  serveHomePage(req, res);
+  redirect(res, "/", 302);
 };
 
 const addTodo = function(req, res) {
@@ -141,7 +143,7 @@ const serveTodoTitles = function(req, res) {
 const handleLogIn = function(req, res) {
   const newUser = readParameters(req.body);
   if (users.isUserValid(newUser)) {
-    redirect(res, "/userDashboard.html", 302);
+    redirect(res, "/dashboard", 302);
     return;
   }
   serveErrorMassage(req, res);
@@ -160,6 +162,10 @@ const serveTodoPage = function(req, res, todoId) {
   send(res, modifiedTodo);
 };
 
+const serveSignUpPage = function(req, res) {
+  send(res, signupPage);
+};
+
 const getTasks = function(req, res) {
   const todoId = parseTitleId(req.url);
   const tasks = users.getTodo("user1", todoId).tasks;
@@ -175,7 +181,7 @@ const deleteTodo = function(req, res) {
   const titleId = readParameters(req.body).id;
   users.deleteTodo("user1", titleId);
   updateAccountsFile(users.accounts);
-  redirect(res, "/userDashboard.html", 302);
+  redirect(res, "/dashboard", 302);
 };
 
 const deleteItem = function(req, res) {
@@ -202,8 +208,8 @@ app.use(logRequest);
 app.use(readBody);
 app.get("/", serveHomePage);
 app.get("/todo.html", serveTodoPage);
-app.post("/dashboard", handleLogIn);
-app.post("/signUp", handleSignUp);
+app.post("/login", handleLogIn);
+app.post("/handleSignUp", handleSignUp);
 app.post(/\/addTask/, addTask);
 app.post("/addTodo", addTodo);
 app.post("/openTodo", openTodo);
@@ -212,6 +218,8 @@ app.post("/deleteItem", deleteItem);
 app.get(/\/toggleStatus/, toggleStatus);
 app.get("/todoList", serveTodoTitles);
 app.get(/\/getTasks/, getTasks);
+app.get("/signUp", serveSignUpPage);
+app.get("/dashboard", serveDashBoard);
 app.use(serveFile);
 
 module.exports = app.handleRequest.bind(app);

@@ -1,4 +1,4 @@
-const USER_ACCOUNTS_FILE = "./src/data/users.json";
+const USER_ACCOUNTS_FILE = "./private/users.json";
 const REDIRECT_STATUS = 302;
 const FILE_NOT_FOUND_STATUS = 404;
 const INDEX_FILE = "./public/index.html";

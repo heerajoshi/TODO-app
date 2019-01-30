@@ -7,9 +7,9 @@ const {
   redirect,
   parseUrl
 } = require("./appUtil");
-const { Users } = require("./users");
-const { TodoList } = require("./todoList");
-const { Todo } = require("./todo");
+const { Users } = require("./entities/users");
+const { TodoList } = require("./entities/todoList");
+const { Todo } = require("./entities/todo");
 const {
   USER_ACCOUNTS_FILE,
   FILE_NOT_FOUND_STATUS,

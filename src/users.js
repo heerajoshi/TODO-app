@@ -26,25 +26,14 @@ class Users {
   }
 
   getTodo(userId, todoId) {
-    return this.getTodoList(userId).filter(todo => todo.id == todoId)[0];
-  }
-
-  getId(userId) {
-    const latestId = this.getTodoList(userId).length;
-    let newId = 0;
-    if (latestId) {
-      let latestTodo = this.getTodo(userId, latestId - 1);
-      newId = latestTodo.id + 1;
-    }
-    return newId;
+    return this.getTodoList(userId)[todoId];
   }
 
   addTodo(userId, todo) {
-    const id = this.getId(userId);
-    this.accounts[userId].todoList.addTodo(todo, id);
+    this.accounts[userId].todoList.addTodo(todo);
   }
+
   addTask(userId, todoId, task) {
-    // console.log(task, this.getTodo(userId, todoId).id);
     this.getTodo(userId, todoId).addTask(task);
   }
 
@@ -53,7 +42,11 @@ class Users {
   }
 
   deleteItem(userId, todoId, itemId) {
-    this.getTodo(userId, todoId).tasks.splice(itemId, 1);
+    this.getTodo(userId, todoId).deleteTask(itemId);
+  }
+
+  markItem(userId, todoId, itemId) {
+    this.getTodo(userId, todoId).markTask(itemId);
   }
 
   getTitles(userId) {

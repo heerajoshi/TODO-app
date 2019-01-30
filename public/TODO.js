@@ -2,16 +2,24 @@ const updateItemsDiv = function(items) {
   const todoId = document.getElementById("todoId").innerHTML;
   const itemsDiv = document.getElementById("TODOItems");
   let jsonContent = JSON.parse(items);
+  let id = 0;
   let list = jsonContent
-    .map(
-      task =>
-        `<div class = "task"><li>${
+    .map(task => {
+      let currentId = id++;
+      return `<div class = "task">
+        <form action = '/checkStatus' method = 'POST'>
+        <input type = checkbox name= "itemId" value = ${currentId} style="width:50px"></input>
+        <input type = hidden name = "todoId" value = ${todoId}></input>
+        <button>done</button>
+          </form>
+        <li>${
           task.description
         }</li><form action = '/deleteItem' method = 'POST'>
-        <input type = hidden name = "itemId" value =${task.id} ></input>
+        <input type = hidden name = "itemId" value =${currentId} ></input>
         <input type = hidden name = "todoId" value = ${todoId}></input>
-        <button>delete</button></form></div>`
-    )
+        <button>delete</button></form>
+        </div>`;
+    })
     .join("");
   itemsDiv.innerHTML = list;
 };

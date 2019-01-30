@@ -85,8 +85,8 @@ const handleSignUp = function(req, res) {
 };
 
 const addTodo = function(req, res) {
-  const todo = readParameters(req.body);
-  todo.tasks = [];
+  const todoDetails = readParameters(req.body);
+  const todo = new Todo(todoDetails);
   users.addTodo("user1", todo);
   updateAccountsFile(users.accounts);
   const newTodoId = users.getTodoList("user1").length - 1;
@@ -103,7 +103,6 @@ const addTask = function(req, res) {
   const todoId = parseTitleId(req.url);
   users.addTask("user1", todoId, req.body);
   const currentTasks = users.getTodo("user1", todoId).tasks;
-  // console.log(currentTasks);
   updateAccountsFile(users.accounts);
   send(res, JSON.stringify(currentTasks));
 };
@@ -159,23 +158,28 @@ const getTasks = function(req, res) {
 
 const openTodo = function(req, res) {
   const titleId = readParameters(req.body).id;
-  console.log(titleId);
-
   serveTodoPage(req, res, titleId);
 };
 
 const deleteTodo = function(req, res) {
   const titleId = readParameters(req.body).id;
   users.deleteTodo("user1", titleId);
-  redirect(res, "/userDashboard.html", 302);
   updateAccountsFile(users.accounts);
+  redirect(res, "/userDashboard.html", 302);
 };
 
 const deleteItem = function(req, res) {
   const { itemId, todoId } = readParameters(req.body);
-  users.deleteItem("user1", todoId, itemId);
+  users.deleteItem("user1", +todoId, +itemId);
+  updateAccountsFile(users.accounts);
+  serveTodoPage(req, res, +todoId);
+};
+
+const toggleStatus = function(req, res) {
+  const { itemId, todoId } = readParameters(req.body);
+  users.markItem("user1", todoId, itemId);
+  updateAccountsFile(users.accounts);
   serveTodoPage(req, res, todoId);
-  // updateAccountsFile(users.accounts);
 };
 
 const app = new ReqSequenceHandler();
@@ -193,6 +197,7 @@ app.post("/addTodo", addTodo);
 app.post("/openTodo", openTodo);
 app.post("/deleteTodo", deleteTodo);
 app.post("/deleteItem", deleteItem);
+app.post("/checkStatus", toggleStatus);
 app.get("/todoList", serveTodoTitles);
 app.get(/\/getTasks/, getTasks);
 app.use(serveFile);

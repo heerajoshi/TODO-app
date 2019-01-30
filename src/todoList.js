@@ -3,13 +3,12 @@ class TodoList {
     this.list = list;
   }
 
-  addTodo(todo, id) {
-    todo.id = id;
+  addTodo(todo) {
     this.list.push(todo);
   }
 
   deleteTodo(todoId) {
-    this.list = this.list.filter(todo => todoId != todo.id);
+    this.list.splice(todoId, 1);
   }
 }
 

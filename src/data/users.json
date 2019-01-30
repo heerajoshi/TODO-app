@@ -1,1 +1,14 @@
-{}
+{
+  "user1": {
+    "password": "1",
+    "todoList": {
+      "list": [
+        {
+          "title": "sasdsadas",
+          "tasks": [],
+          "description": "dsadasd"
+        }
+      ]
+    }
+  }
+}

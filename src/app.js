@@ -16,7 +16,8 @@ const {
   serveHomePage,
   serveSignUpPage,
   getTasks,
-  serveTodoPage
+  serveTodoPage,
+  editTask
 } = require("./appHandlers.js");
 
 const app = new ReqSequenceHandler();
@@ -37,6 +38,7 @@ app.post("/deleteTodo", deleteTodo);
 app.post("/deleteItem", deleteItem);
 app.post("/toggleStatus", toggleStatus);
 app.post("/getTasks", getTasks);
+app.post("/editTask", editTask);
 app.use(serveFile);
 
 module.exports = app.handleRequest.bind(app);

@@ -37,6 +37,10 @@ class Users {
     this.getTodo(userId, todoId).addTask(task);
   }
 
+  editTask(userId, todoId, task, taskId) {
+    this.getTodo(userId, todoId).editTask(taskId, task);
+  }
+
   deleteTodo(userId, todoId) {
     this.accounts[userId].todoList.deleteTodo(todoId);
   }

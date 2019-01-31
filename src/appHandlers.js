@@ -108,6 +108,7 @@ const serveHomePage = function(req, res) {
 };
 
 const serveTodoPage = function(req, res, todoId) {
+  console.log(todoId);
   const todo = users.getTodo("user1", todoId);
   let modifiedTodo = todoHtml.replace(TODO_TITLE, decrypt(todo.title));
   modifiedTodo = modifiedTodo.replace(DESCRIPTION, decrypt(todo.description));
@@ -197,6 +198,13 @@ const handleSignUp = function(req, res) {
   redirect(res, "/", 302);
 };
 
+const editTask = function(req, res) {
+  const { task, todoId, taskId } = readParameters(req.body);
+  users.editTask("user1", todoId, decrypt(task), taskId);
+  updateAccountsFile(users.accounts);
+  serveTodoPage(req, res, todoId);
+};
+
 const users = new Users(readUserDetails());
 loadInstances();
 
@@ -218,5 +226,6 @@ module.exports = {
   serveHomePage,
   serveSignUpPage,
   getTasks,
-  serveTodoPage
+  serveTodoPage,
+  editTask
 };

@@ -14,6 +14,10 @@ class Todo {
     this.tasks.push(taskObject);
   }
 
+  editTask(taskId, description) {
+    this.tasks[taskId] = { description, status: false };
+  }
+
   toggleStatus(taskId) {
     this.tasks[taskId].status = !this.getStatus(taskId);
   }

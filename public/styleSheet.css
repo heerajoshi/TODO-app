@@ -133,6 +133,19 @@ button {
 }
 
 .description {
-  width: 500px;
+  width: 1000px;
   word-wrap: break-word;
+}
+
+.description:hover {
+  cursor: pointer;
+  background-color: lightblue;
+}
+
+/* .save {
+  visibility: hidden;
+} */
+
+.editForm {
+  visibility: hidden;
 }

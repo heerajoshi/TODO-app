@@ -30,7 +30,10 @@ const createButton = function(value) {
 const toggleStatus = function(taskId) {
   const todoId = document.getElementById("todoId").innerHTML;
   const setStatusOnClick = setTaskStatus.bind(null, event.target);
-  fetch(`/toggleStatus?todoId=${todoId}&taskId=${taskId}`)
+  fetch(`/toggleStatus`, {
+    method: "POST",
+    body: JSON.stringify({ taskId, todoId })
+  })
     .then(response => response.text())
     .then(setStatusOnClick);
 };
@@ -81,10 +84,9 @@ const updateItemsDiv = function(items) {
 };
 
 const updateTODO = function() {
-  const item = document.getElementById("item").value;
+  const task = document.getElementById("item").value;
   const todoId = document.getElementById("todoId").innerHTML;
-
-  fetch(`/addTask?id=${todoId}`, { method: "POST", body: item })
+  fetch(`/addTask`, { method: "POST", body: JSON.stringify({ task, todoId }) })
     .then(response => response.text())
     .then(updateItemsDiv);
 };
@@ -92,7 +94,10 @@ const updateTODO = function() {
 const getTasks = function() {
   const todoId = document.getElementById("todoId").innerHTML;
 
-  fetch(`/getTasks?id=${todoId}`)
+  fetch(`/getTasks`, {
+    method: "POST",
+    body: JSON.stringify({ todoId })
+  })
     .then(response => response.text())
     .then(updateItemsDiv);
 };

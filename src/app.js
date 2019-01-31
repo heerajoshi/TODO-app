@@ -112,8 +112,8 @@ const decrypt = data => {
  */
 
 const addTask = function(req, res) {
-  const todoId = parseTitleId(req.url);
-  users.addTask("user1", todoId, req.body);
+  const { task, todoId } = JSON.parse(req.body);
+  users.addTask("user1", todoId, task);
   const currentTasks = users.getTodo("user1", todoId).tasks;
   updateAccountsFile(users.accounts);
   send(res, JSON.stringify(currentTasks));
@@ -167,7 +167,7 @@ const serveSignUpPage = function(req, res) {
 };
 
 const getTasks = function(req, res) {
-  const todoId = parseTitleId(req.url);
+  const { todoId } = JSON.parse(req.body);
   const tasks = users.getTodo("user1", todoId).tasks;
   send(res, JSON.stringify(tasks));
 };
@@ -192,7 +192,7 @@ const deleteItem = function(req, res) {
 };
 
 const toggleStatus = function(req, res) {
-  const { taskId, todoId } = parseUrl(req.url);
+  const { taskId, todoId } = JSON.parse(req.body);
   console.log(taskId, todoId);
   users.toggleStatus("user1", todoId, taskId);
   const currentStatus = users.getStatus("user1", todoId, taskId);
@@ -207,19 +207,19 @@ loadInstances();
 app.use(logRequest);
 app.use(readBody);
 app.get("/", serveHomePage);
+app.get("/todoList", serveTodoTitles);
+app.get("/signUp", serveSignUpPage);
+app.get("/dashboard", serveDashBoard);
 app.get("/todo.html", serveTodoPage);
 app.post("/login", handleLogIn);
 app.post("/handleSignUp", handleSignUp);
-app.post(/\/addTask/, addTask);
+app.post("/addTask", addTask);
 app.post("/addTodo", addTodo);
 app.post("/openTodo", openTodo);
 app.post("/deleteTodo", deleteTodo);
 app.post("/deleteItem", deleteItem);
-app.get(/\/toggleStatus/, toggleStatus);
-app.get("/todoList", serveTodoTitles);
-app.get(/\/getTasks/, getTasks);
-app.get("/signUp", serveSignUpPage);
-app.get("/dashboard", serveDashBoard);
+app.post("/toggleStatus", toggleStatus);
+app.post("/getTasks", getTasks);
 app.use(serveFile);
 
 module.exports = app.handleRequest.bind(app);

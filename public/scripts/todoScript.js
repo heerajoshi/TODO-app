@@ -35,7 +35,6 @@ const createButton = function(value) {
 };
 
 const showEditForm = function(id) {
-  console.log(document.getElementById("edit_" + id));
   document.getElementById("edit_" + id).style.visibility = "visible";
 };
 
@@ -84,26 +83,36 @@ const appendChildren = function(parent, childs) {
   childs.forEach(child => parent.appendChild(child));
 };
 
-const createElements = function(currentId, todoId, task) {
-  const mainDiv = createDiv("task", "");
-  const descriptionDiv = createDescriptionBlock("description", task, currentId);
+const composeDeleteForm = function(todoId, taskId) {
   const deleteForm = createDeleteForm();
-  const editForm = createEditForm(currentId);
-  const hiddenEditBox = createInput("task", currentId);
-  const hiddenEditItemId = createHiddenInput("taskId", currentId);
-  const hiddenEditTodoId = createHiddenInput("todoId", todoId);
-  const hiddenItemId = createHiddenInput("itemId", currentId);
-  const hiddenTodoId = createHiddenInput("todoId", todoId);
   const deleteButton = createButton("delete");
+  const hiddenItemId = createHiddenInput("itemId", taskId);
+  const hiddenTodoId = createHiddenInput("todoId", todoId);
+  appendChildren(deleteForm, [hiddenItemId, hiddenTodoId, deleteButton]);
+  return deleteForm;
+};
+
+const composeEditForm = function(todoId, taskId) {
+  const editForm = createEditForm(taskId);
+  const hiddenEditBox = createInput("task", taskId);
+  const hiddenEditItemId = createHiddenInput("taskId", taskId);
+  const hiddenEditTodoId = createHiddenInput("todoId", todoId);
   const saveButton = createButton("save");
-  const editButton = createEditButton("edit", currentId);
   appendChildren(editForm, [
     hiddenEditBox,
     saveButton,
     hiddenEditItemId,
     hiddenEditTodoId
   ]);
-  appendChildren(deleteForm, [hiddenItemId, hiddenTodoId, deleteButton]);
+  return editForm;
+};
+
+const createElements = function(currentId, todoId, task) {
+  const mainDiv = createDiv("task", "");
+  const deleteForm = composeDeleteForm(todoId, currentId);
+  const editForm = composeEditForm(todoId, currentId);
+  const descriptionDiv = createDescriptionBlock("description", task, currentId);
+  const editButton = createEditButton("edit", currentId);
   appendChildren(mainDiv, [descriptionDiv, deleteForm, editButton, editForm]);
   return mainDiv;
 };

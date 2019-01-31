@@ -131,3 +131,8 @@ button {
   height: 30px;
   border-radius: 2px;
 }
+
+.description {
+  width: 500px;
+  word-wrap: break-word;
+}

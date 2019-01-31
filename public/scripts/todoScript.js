@@ -40,9 +40,9 @@ const setTaskStatus = function(element, status) {
   element.style.textDecoration = textDecorations[status];
 };
 
-const createDescriptionDiv = function(className, task, taskId) {
-  const descriptionDiv = document.createElement("button");
-  descriptionDiv.innerHTML = task.description;
+const createDescriptionBlock = function(className, task, taskId) {
+  const descriptionDiv = document.createElement("p");
+  descriptionDiv.innerText = task.description;
   descriptionDiv.id = taskId;
   descriptionDiv.className = className;
   setTaskStatus(descriptionDiv, task.status);
@@ -56,7 +56,7 @@ const appendChildren = function(parent, childs) {
 
 const createElements = function(currentId, todoId, task) {
   const mainDiv = createDiv("task", "");
-  const descriptionDiv = createDescriptionDiv("description", task, currentId);
+  const descriptionDiv = createDescriptionBlock("description", task, currentId);
   const deleteForm = createDeleteForm();
   const hiddenItemId = createHiddenInput("itemId", currentId);
   const hiddenTodoId = createHiddenInput("todoId", todoId);

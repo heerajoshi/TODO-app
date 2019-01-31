@@ -131,7 +131,7 @@ const updateItemsDiv = function(items) {
   appendChildren(itemsDiv, list);
 };
 
-const updateTODO = function() {
+const updateTodo = function() {
   const task = document.getElementById("item").value;
   const todoId = document.getElementById("todoId").innerHTML;
   fetch(`/addTask`, { method: "POST", body: JSON.stringify({ task, todoId }) })
@@ -152,7 +152,7 @@ const getTasks = function() {
 
 const initialise = function() {
   const addItemButton = document.getElementById("addItem");
-  addItemButton.onclick = updateTODO;
+  addItemButton.onclick = updateTodo;
   getTasks();
 };
 

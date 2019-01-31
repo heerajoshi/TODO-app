@@ -2,7 +2,7 @@ const fs = require("fs");
 const { Users } = require("./entities/users");
 const { TodoList } = require("./entities/todoList");
 const { Todo } = require("./entities/todo");
-const { send, readParameters, redirect } = require("./appUtil");
+const { send, readParameters, redirect, parseTitleId } = require("./appUtil");
 const {
   USER_ACCOUNTS_FILE,
   FILE_NOT_FOUND_STATUS,
@@ -51,7 +51,7 @@ const addTodo = function(req, res) {
   users.addTodo("user1", todo);
   updateAccountsFile(users.accounts);
   const newTodoId = users.getTodoList("user1").length - 1;
-  serveTodoPage(req, res, newTodoId);
+  redirect(res, `/userTodo?todoId=${newTodoId}`, 302);
 };
 
 const decrypt = data => {
@@ -107,8 +107,9 @@ const serveHomePage = function(req, res) {
   send(res, renderedHomePage);
 };
 
-const serveTodoPage = function(req, res, todoId) {
-  console.log(todoId);
+const serveTodoPage = function(req, res) {
+  const todoId = parseTitleId(req.url);
+  console.log(req.url, todoId);
   const todo = users.getTodo("user1", todoId);
   let modifiedTodo = todoHtml.replace(TODO_TITLE, decrypt(todo.title));
   modifiedTodo = modifiedTodo.replace(DESCRIPTION, decrypt(todo.description));
@@ -127,8 +128,8 @@ const getTasks = function(req, res) {
 };
 
 const openTodo = function(req, res) {
-  const titleId = readParameters(req.body).id;
-  serveTodoPage(req, res, titleId);
+  const todoId = readParameters(req.body).id;
+  redirect(res, `/userTodo?todoId=${todoId}`, 302);
 };
 
 const deleteTodo = function(req, res) {
@@ -142,7 +143,7 @@ const deleteItem = function(req, res) {
   const { itemId, todoId } = readParameters(req.body);
   users.deleteItem("user1", +todoId, +itemId);
   updateAccountsFile(users.accounts);
-  serveTodoPage(req, res, +todoId);
+  redirect(res, `/userTodo?todoId=${todoId}`, 302);
 };
 
 const toggleStatus = function(req, res) {
@@ -202,7 +203,7 @@ const editTask = function(req, res) {
   const { task, todoId, taskId } = readParameters(req.body);
   users.editTask("user1", todoId, decrypt(task), taskId);
   updateAccountsFile(users.accounts);
-  serveTodoPage(req, res, todoId);
+  redirect(res, `/userTodo?todoId=${todoId}`, 302);
 };
 
 const users = new Users(readUserDetails());

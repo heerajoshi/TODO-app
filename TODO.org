@@ -18,4 +18,5 @@
 ----------------------------------------
 
 * TODO move msg to constant
-* TODO move validation to class.
+* TODO move validation to class.0
+* appHandlers ===> handlers.

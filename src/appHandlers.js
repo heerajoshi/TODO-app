@@ -25,7 +25,11 @@ const signupPage = fs.readFileSync(SIGNUP_PAGE, UTF8);
 const userDashBoard = fs.readFileSync(DASHBOARD_TEMPLATE, UTF8);
 
 const readUserDetails = () => {
-  const users = fs.readFileSync(USER_ACCOUNTS_FILE, UTF8);
+  let users = fs.readFileSync(USER_ACCOUNTS_FILE, UTF8);
+  if (users == "") {
+    users = JSON.stringify({});
+    fs.writeFileSync(USER_ACCOUNTS_FILE, users);
+  }
   return JSON.parse(users);
 };
 

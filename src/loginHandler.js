@@ -62,9 +62,17 @@ const isLoginPageReq = url => {
   );
 };
 
+const isSignupReq = function(url) {
+  return url == "/signUp" || url == "/handleSignUp";
+};
+
+const isUserLoggedIn = function(reqCookie, url) {
+  return sessions[reqCookie] || isLoginPageReq(url) || isSignupReq(url);
+};
+
 const checkCookies = function(req, res, next) {
   const reqCookie = req.headers.cookie;
-  if (sessions[reqCookie] || isLoginPageReq(req.url)) {
+  if (isUserLoggedIn(reqCookie, req.url)) {
     next();
     return;
   }

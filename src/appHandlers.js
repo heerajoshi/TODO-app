@@ -129,6 +129,11 @@ const serveTodoTitles = function(req, res) {
  */
 
 const serveHomePage = function(req, res) {
+  const reqCookie = req.headers.cookie;
+  if (sessions[reqCookie]) {
+    redirect(res, "/dashboard");
+    return;
+  }
   let renderedHomePage = homePage.replace(INVALID_PASSWORD, "");
   send(res, renderedHomePage);
 };

@@ -38,7 +38,8 @@ const parseUrl = function(url) {
 };
 
 const decrypt = data => {
-  return unescape(data).replace(/\+/g, " ");
+  const decryptedData = unescape(data).replace(/\+/g, " ");
+  return decryptedData.trim();
 };
 
 module.exports = {

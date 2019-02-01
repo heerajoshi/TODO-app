@@ -23,7 +23,9 @@ const {
   TODO_TITLE,
   DESCRIPTION,
   SIGNUP_PAGE,
-  SESSIONS_PATH
+  SESSIONS_PATH,
+  EXISTING_USER_REGEXP,
+  EXISTING_USER_MESSAGE
 } = require("./constants");
 
 const todoHtml = fs.readFileSync(TODO_TEMPLATE, UTF8);
@@ -165,7 +167,8 @@ const serveTodoPage = function(req, res) {
  */
 
 const serveSignUpPage = function(req, res) {
-  send(res, signupPage);
+  let modifiedSignUpPage = signupPage.replace(EXISTING_USER_REGEXP, "");
+  send(res, modifiedSignUpPage);
 };
 
 /**
@@ -299,10 +302,22 @@ const updateAccountsFile = function(users) {
   fs.writeFile(USER_ACCOUNTS_FILE, JSON.stringify(users, null, 2), error => {});
 };
 
+const serveSignUpError = function(req, res) {
+  let modifiedSignUpPage = signupPage.replace(
+    EXISTING_USER_REGEXP,
+    EXISTING_USER_MESSAGE
+  );
+  send(res, modifiedSignUpPage);
+};
+
 const handleSignUp = function(req, res) {
   const todoList = new TodoList([]);
   const newUser = readParameters(req.body);
   userId = newUser.userId;
+  if (users.accounts[userId]) {
+    serveSignUpError(req, res);
+    return;
+  }
   users.addUser(newUser, todoList);
   updateAccountsFile(users.accounts);
   redirect(res, "/");

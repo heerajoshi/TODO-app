@@ -14,6 +14,8 @@ const TODO_TITLE = "###title###";
 const DESCRIPTION = "###description###";
 const SIGNUP_PAGE = "./public/signUp.html";
 const SESSIONS_PATH = "./private/sessions.json";
+const EXISTING_USER_REGEXP = " ###user name  already define###";
+const EXISTING_USER_MESSAGE = "username is already exists";
 
 module.exports = {
   USER_ACCOUNTS_FILE,
@@ -31,5 +33,7 @@ module.exports = {
   TODO_TITLE,
   DESCRIPTION,
   SIGNUP_PAGE,
-  SESSIONS_PATH
+  SESSIONS_PATH,
+  EXISTING_USER_REGEXP,
+  EXISTING_USER_MESSAGE
 };

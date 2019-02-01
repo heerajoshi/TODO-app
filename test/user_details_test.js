@@ -8,7 +8,7 @@ describe("Users", function() {
 
   describe("Users.add", function() {
     it("should update the Users with newUser and its todoList", function() {
-      const newUser = { userName: "user1", password: "1234" };
+      const newUser = { userId: "user1", password: "1234" };
       const todoList = {};
       const expectedDetails = {
         user1: {
@@ -25,7 +25,7 @@ describe("Users", function() {
 
   describe("Users.getTodoList", function() {
     it("should return  todo list of specified user", function() {
-      const newUser = { userName: "user1", password: "1234" };
+      const newUser = { userId: "user1", password: "1234" };
       const todoList = { list: [] };
 
       userDetails.addUser(newUser, todoList);
@@ -36,7 +36,7 @@ describe("Users", function() {
 
   describe("Users.addTodo", function() {
     it("should update the todotasks with provided todo", function() {
-      const newUser = { userName: "user1", password: "1234" };
+      const newUser = { userId: "user1", password: "1234" };
       const todoList = new TodoList([]);
       const todo = { title: "work", description: "office", tasks: [] };
 

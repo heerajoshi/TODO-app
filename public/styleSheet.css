@@ -36,14 +36,13 @@
   margin: 0px auto;
   background: whitesmoke;
 }
-.header {
+/* .heading {
   text-align: center;
-}
+} */
 .addTodo {
   text-align: center;
   padding: 20px;
   margin: 10px;
-  width: 500px;
   border: 1px solid black;
 }
 
@@ -68,14 +67,13 @@
   margin: 100px auto;
 }
 
-.dashBoard {
+/* .dashBoard {
   display: flex;
-}
+} */
 .titles {
   align-content: center;
   padding: 20px;
   margin: 10px;
-  width: 500px;
   border: 1px solid black;
 }
 .todo {
@@ -144,4 +142,9 @@ button {
 
 .editForm {
   visibility: hidden;
+}
+
+.titleBar {
+  display: inline;
+  background: rebeccapurple;
 }

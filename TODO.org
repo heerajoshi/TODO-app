@@ -20,3 +20,4 @@
 * TODO move msg to constant
 * TODO move validation to class.0
 * appHandlers ===> handlers.
+* on dashboard provide name of user.

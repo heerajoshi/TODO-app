@@ -4,7 +4,7 @@ class Users {
   }
 
   addUser(newUser, todoList) {
-    this.accounts[newUser.userName] = {
+    this.accounts[newUser.userId] = {
       password: newUser.password,
       todoList: todoList
     };
@@ -15,8 +15,8 @@ class Users {
   }
 
   isUserValid(newUser) {
-    if (this.accounts[newUser.userName]) {
-      return this.accounts[newUser.userName].password === newUser.password;
+    if (this.accounts[newUser.userId]) {
+      return this.accounts[newUser.userId].password === newUser.password;
     }
     return false;
   }

@@ -37,11 +37,16 @@ const parseUrl = function(url) {
   return readParameters(args);
 };
 
+const decrypt = data => {
+  return unescape(data).replace(/\+/g, " ");
+};
+
 module.exports = {
   isMatching,
   send,
   readParameters,
   parseTitleId,
   redirect,
-  parseUrl
+  parseUrl,
+  decrypt
 };

@@ -13,6 +13,7 @@ const INVALID_PASSWORD = "###invalid_password###";
 const TODO_TITLE = "###title###";
 const DESCRIPTION = "###description###";
 const SIGNUP_PAGE = "./public/signUp.html";
+const SESSIONS_PATH = "./private/sessions.json";
 
 module.exports = {
   USER_ACCOUNTS_FILE,
@@ -29,5 +30,6 @@ module.exports = {
   INVALID_PASSWORD,
   TODO_TITLE,
   DESCRIPTION,
-  SIGNUP_PAGE
+  SIGNUP_PAGE,
+  SESSIONS_PATH
 };

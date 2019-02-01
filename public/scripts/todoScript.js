@@ -15,14 +15,14 @@ const createDeleteForm = function() {
 };
 
 const createHiddenInput = function(name, id) {
-  const input = createInput(name, id);
+  const input = createInput(name);
+  input.value = id;
   input.type = "hidden";
   return input;
 };
 
-const createInput = function(name, id) {
+const createInput = function(name) {
   const input = document.createElement("input");
-  input.value = id;
   input.name = name;
   return input;
 };
@@ -44,8 +44,8 @@ const createEditButton = function(value, taskId) {
   return button;
 };
 
-const toggleStatus = function(taskId) {
-  const todoId = document.getElementById("todoId").innerHTML;
+const toggleStatus = function(taskId, todoId) {
+  // const todoId = document.getElementById("todoId").innerHTML - 1;
   const setStatusOnClick = setTaskStatus.bind(null, event.target);
   fetch(`/toggleStatus`, {
     method: "POST",
@@ -69,13 +69,13 @@ const setTaskStatus = function(element, status) {
   element.style.textDecoration = textDecorations[status];
 };
 
-const createDescriptionBlock = function(className, task, taskId) {
+const createDescriptionBlock = function(className, task, taskId, todoId) {
   const descriptionDiv = document.createElement("p");
   descriptionDiv.innerText = task.description;
   descriptionDiv.id = taskId;
   descriptionDiv.className = className;
   setTaskStatus(descriptionDiv, task.status);
-  descriptionDiv.onclick = toggleStatus.bind(null, taskId);
+  descriptionDiv.onclick = toggleStatus.bind(null, taskId, todoId);
   return descriptionDiv;
 };
 
@@ -111,14 +111,19 @@ const createElements = function(currentId, todoId, task) {
   const mainDiv = createDiv("task", "");
   const deleteForm = composeDeleteForm(todoId, currentId);
   const editForm = composeEditForm(todoId, currentId);
-  const descriptionDiv = createDescriptionBlock("description", task, currentId);
+  const descriptionDiv = createDescriptionBlock(
+    "description",
+    task,
+    currentId,
+    todoId
+  );
   const editButton = createEditButton("edit", currentId);
   appendChildren(mainDiv, [descriptionDiv, deleteForm, editButton, editForm]);
   return mainDiv;
 };
 
 const updateItemsDiv = function(items) {
-  const todoId = document.getElementById("todoId").innerHTML;
+  const todoId = document.getElementById("todoId").innerHTML - 1;
   const itemsDiv = document.getElementById("TODOItems");
   itemsDiv.innerHTML = "";
   let jsonContent = JSON.parse(items);
@@ -133,14 +138,14 @@ const updateItemsDiv = function(items) {
 
 const updateTodo = function() {
   const task = document.getElementById("item").value;
-  const todoId = document.getElementById("todoId").innerHTML;
+  const todoId = document.getElementById("todoId").innerHTML - 1;
   fetch(`/addTask`, { method: "POST", body: JSON.stringify({ task, todoId }) })
     .then(response => response.text())
     .then(updateItemsDiv);
 };
 
 const getTasks = function() {
-  const todoId = document.getElementById("todoId").innerHTML;
+  const todoId = document.getElementById("todoId").innerHTML - 1;
 
   fetch(`/getTasks`, {
     method: "POST",

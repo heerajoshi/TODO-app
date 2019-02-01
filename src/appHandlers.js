@@ -67,7 +67,7 @@ const addTodo = function(req, res) {
   users.addTodo("user1", todo);
   updateAccountsFile(users.accounts);
   const newTodoId = users.getTodoList("user1").length - 1;
-  redirect(res, `/userTodo?todoId=${newTodoId}`, 302);
+  redirect(res, `/userTodo?todoId=${newTodoId}`);
 };
 
 /**
@@ -161,7 +161,7 @@ const getTasks = function(req, res) {
 
 const openTodo = function(req, res) {
   const todoId = readParameters(req.body).id;
-  redirect(res, `/userTodo?todoId=${todoId}`, 302);
+  redirect(res, `/userTodo?todoId=${todoId}`);
 };
 
 /**
@@ -174,7 +174,7 @@ const deleteTodo = function(req, res) {
   const titleId = readParameters(req.body).id;
   users.deleteTodo("user1", titleId);
   updateAccountsFile(users.accounts);
-  redirect(res, "/dashboard", 302);
+  redirect(res, "/dashboard");
 };
 
 /**
@@ -187,7 +187,7 @@ const deleteItem = function(req, res) {
   const { itemId, todoId } = readParameters(req.body);
   users.deleteItem("user1", +todoId, +itemId);
   updateAccountsFile(users.accounts);
-  redirect(res, `/userTodo?todoId=${todoId}`, 302);
+  redirect(res, `/userTodo?todoId=${todoId}`);
 };
 
 /**
@@ -274,14 +274,14 @@ const handleSignUp = function(req, res) {
   userId = newUser.userId;
   users.addUser(newUser, todoList);
   updateAccountsFile(users.accounts);
-  redirect(res, "/", 302);
+  redirect(res, "/");
 };
 
 const editTask = function(req, res) {
   const { task, todoId, taskId } = readParameters(req.body);
   users.editTask("user1", todoId, decrypt(task), taskId);
   updateAccountsFile(users.accounts);
-  redirect(res, `/userTodo?todoId=${todoId}`, 302);
+  redirect(res, `/userTodo?todoId=${todoId}`);
 };
 
 const users = new Users(readUserDetails());

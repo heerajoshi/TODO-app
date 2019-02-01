@@ -41,7 +41,7 @@ const renderHomePage = function(res, userId) {
   const cookie = new Date().getTime();
   addSession(userId, cookie);
   res.setHeader("Set-Cookie", `${cookie}`);
-  redirect(res, "/dashboard", 302);
+  redirect(res, "/dashboard");
 };
 
 const handleLogIn = function(req, res) {
@@ -76,7 +76,7 @@ const checkCookies = function(req, res, next) {
     next();
     return;
   }
-  redirect(res, "/", 302);
+  redirect(res, "/");
 };
 
 const deleteSession = function(sessionId) {
@@ -88,7 +88,7 @@ const handleLogout = function(req, res) {
   deleteSession(req.headers.cookie);
   const expiryDate = new Date().toUTCString();
   res.setHeader("Set-Cookie", `session=;expires=${expiryDate}`);
-  redirect(res, "/", 302);
+  redirect(res, "/");
 };
 
 const sessions = readSessions();

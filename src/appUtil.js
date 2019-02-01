@@ -11,9 +11,9 @@ const send = (res, content, statusCode = 200) => {
   res.end();
 };
 
-const redirect = function(res, url, statusCode) {
+const redirect = function(res, url) {
   res.setHeader("location", url);
-  res.statusCode = statusCode;
+  res.statusCode = 302;
   res.end();
 };
 

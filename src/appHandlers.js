@@ -6,7 +6,7 @@ const {
   send,
   readParameters,
   redirect,
-  parseTitleId,
+  parseUrl,
   decrypt
 } = require("./appUtil");
 const {
@@ -145,7 +145,7 @@ const serveHomePage = function(req, res) {
  */
 
 const serveTodoPage = function(req, res) {
-  const todoId = parseTitleId(req.url);
+  const { todoId } = parseUrl(req.url);
   const userId = sessions[req.headers.cookie];
   const todo = users.getTodo(userId, todoId);
   let modifiedTodo = todoHtml.replace(TODO_TITLE, decrypt(todo.title));

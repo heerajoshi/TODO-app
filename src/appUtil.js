@@ -28,10 +28,6 @@ const readParameters = parameters => {
   return args;
 };
 
-const parseTitleId = function(url) {
-  return +url.split("=")[1];
-};
-
 const parseUrl = function(url) {
   const args = url.split("?")[1];
   return readParameters(args);
@@ -46,7 +42,7 @@ module.exports = {
   isMatching,
   send,
   readParameters,
-  parseTitleId,
+  parseUrl,
   redirect,
   parseUrl,
   decrypt

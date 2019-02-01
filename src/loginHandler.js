@@ -5,15 +5,19 @@ const {
   UTF8,
   INVALID_PASSWORD
 } = require("./constants");
-const { redirect, readParameters, send } = require("./appUtil");
+const { redirect, readParameters, send, parseTitleId } = require("./appUtil");
 const { users, serveHomePage } = require("./appHandlers");
 const homePage = fs.readFileSync(HOME_PAGE, UTF8);
+
+const updateSessionsFile = function() {
+  fs.writeFile(SESSIONS_PATH, JSON.stringify(sessions), UTF8, () => {});
+};
 
 const readSessions = () => {
   let sessions = fs.readFileSync(SESSIONS_PATH, UTF8);
   if (sessions == "") {
     sessions = JSON.stringify({});
-    fs.writeFileSync(SESSIONS_PATH, sessions);
+    updateSessionsFile();
   }
   return JSON.parse(sessions);
 };
@@ -36,7 +40,7 @@ const addSession = function(userId, cookie) {
 const renderHomePage = function(res, userId) {
   const cookie = new Date().getTime();
   addSession(userId, cookie);
-  res.setHeader("Set-Cookie", `session=${cookie}`);
+  res.setHeader("Set-Cookie", `${cookie}`);
   redirect(res, "/dashboard", 302);
 };
 
@@ -48,16 +52,37 @@ const handleLogIn = function(req, res) {
   serveErrorMessage(req, res);
 };
 
+const isLoginPageReq = url => {
+  console.log(url, "cooki");
+  return (
+    url == "/" ||
+    url == "/styleSheet.css" ||
+    url == "/favicon.ico" ||
+    url == "/login"
+  );
+};
+
 const checkCookies = function(req, res, next) {
   const reqCookie = req.headers.cookie;
-  console.log(reqCookie, 'mat');
-  if (sessions[reqCookie]) {
+  if (sessions[reqCookie] || isLoginPageReq(req.url)) {
     next();
     return;
   }
   redirect(res, "/", 302);
 };
 
+const deleteSession = function(sessionId) {
+  delete sessions[sessionId];
+  updateSessionsFile();
+};
+
+const handleLogout = function(req, res) {
+  deleteSession(req.headers.cookie);
+  const expiryDate = new Date().toUTCString();
+  res.setHeader("Set-Cookie", `session=;expires=${expiryDate}`);
+  redirect(res, "/", 302);
+};
+
 const sessions = readSessions();
 
-module.exports = { handleLogIn, checkCookies };
+module.exports = { handleLogIn, checkCookies, handleLogout };

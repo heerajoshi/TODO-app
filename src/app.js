@@ -18,19 +18,21 @@ const {
   serveTodoPage,
   editTask
 } = require("./appHandlers.js");
-const { handleLogIn, checkCookies } = require("./loginHandler");
+
+const { handleLogIn, checkCookies, handleLogout } = require("./loginHandler");
 
 const app = new ReqSequenceHandler();
 
 app.use(logRequest);
 app.use(readBody);
+app.use(checkCookies);
 app.get("/", serveHomePage);
 app.post("/handleSignUp", handleSignUp);
-// app.use(checkCookies);
 app.get("/todoList", serveTodoTitles);
 app.get("/signUp", serveSignUpPage);
 app.get("/dashboard", serveDashBoard);
 app.get(/\/userTodo/, serveTodoPage);
+app.get(/\/logout/, handleLogout);
 app.post("/login", handleLogIn);
 app.post("/addTask", addTask);
 app.post("/addTodo", addTodo);

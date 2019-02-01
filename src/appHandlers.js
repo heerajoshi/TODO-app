@@ -148,6 +148,10 @@ const serveTodoPage = function(req, res) {
   const { todoId } = parseUrl(req.url);
   const userId = sessions[req.headers.cookie];
   const todo = users.getTodo(userId, todoId);
+  if (!todo) {
+    send(res, "Invalid Request", 404);
+    return;
+  }
   let modifiedTodo = todoHtml.replace(TODO_TITLE, decrypt(todo.title));
   modifiedTodo = modifiedTodo.replace(DESCRIPTION, decrypt(todo.description));
   modifiedTodo = modifiedTodo.replace(TODO_ID, todoId + 1);

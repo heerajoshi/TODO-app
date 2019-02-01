@@ -1,11 +1,12 @@
 const fs = require("fs");
-const {
-  HOME_PAGE,
-  UTF8,
-  INVALID_PASSWORD
-} = require("./constants");
+const { HOME_PAGE, UTF8, INVALID_PASSWORD } = require("./constants");
 const { redirect, readParameters, send, parseTitleId } = require("./appUtil");
-const { users, serveHomePage, sessions, updateSessionsFile } = require("./appHandlers");
+const {
+  users,
+  serveHomePage,
+  sessions,
+  updateSessionsFile
+} = require("./appHandlers");
 const homePage = fs.readFileSync(HOME_PAGE, UTF8);
 
 const serveErrorMessage = function(req, res) {
@@ -76,7 +77,5 @@ const handleLogout = function(req, res) {
   res.setHeader("Set-Cookie", `session=;expires=${expiryDate}`);
   redirect(res, "/");
 };
-
-
 
 module.exports = { handleLogIn, checkCookies, handleLogout };

@@ -22,13 +22,27 @@ const {
   INVALID_PASSWORD,
   TODO_TITLE,
   DESCRIPTION,
-  SIGNUP_PAGE
+  SIGNUP_PAGE,
+  SESSIONS_PATH
 } = require("./constants");
 
 const todoHtml = fs.readFileSync(TODO_TEMPLATE, UTF8);
 const homePage = fs.readFileSync(HOME_PAGE, UTF8);
 const signupPage = fs.readFileSync(SIGNUP_PAGE, UTF8);
 const userDashBoard = fs.readFileSync(DASHBOARD_TEMPLATE, UTF8);
+
+const updateSessionsFile = function() {
+  fs.writeFile(SESSIONS_PATH, JSON.stringify(sessions), UTF8, () => {});
+};
+
+const readSessions = () => {
+  let sessions = fs.readFileSync(SESSIONS_PATH, UTF8);
+  if (sessions == "") {
+    sessions = JSON.stringify({});
+    updateSessionsFile();
+  }
+  return JSON.parse(sessions);
+};
 
 const readUserDetails = () => {
   let users = fs.readFileSync(USER_ACCOUNTS_FILE, UTF8);
@@ -64,9 +78,10 @@ const addTodo = function(req, res) {
     description: decrypt(description)
   };
   const todo = new Todo(todoDetails);
-  users.addTodo("user1", todo);
+  const userId = sessions[req.headers.cookie];
+  users.addTodo(userId, todo);
   updateAccountsFile(users.accounts);
-  const newTodoId = users.getTodoList("user1").length - 1;
+  const newTodoId = users.getTodoList(userId).length - 1;
   redirect(res, `/userTodo?todoId=${newTodoId}`);
 };
 
@@ -78,8 +93,9 @@ const addTodo = function(req, res) {
 
 const addTask = function(req, res) {
   const { task, todoId } = JSON.parse(req.body);
-  users.addTask("user1", todoId, decrypt(task));
-  const currentTasks = users.getTodo("user1", todoId).tasks;
+  const userId = sessions[req.headers.cookie];
+  users.addTask(userId, todoId, decrypt(task));
+  const currentTasks = users.getTodo(userId, todoId).tasks;
   updateAccountsFile(users.accounts);
   send(res, JSON.stringify(currentTasks));
 };
@@ -101,7 +117,8 @@ const serveDashBoard = function(req, res) {
  */
 
 const serveTodoTitles = function(req, res) {
-  const todoList = users.getTodoList("user1");
+  const userId = sessions[req.headers.cookie];
+  const todoList = users.getTodoList(userId);
   send(res, JSON.stringify(todoList));
 };
 
@@ -124,7 +141,8 @@ const serveHomePage = function(req, res) {
 
 const serveTodoPage = function(req, res) {
   const todoId = parseTitleId(req.url);
-  const todo = users.getTodo("user1", todoId);
+  const userId = sessions[req.headers.cookie];
+  const todo = users.getTodo(userId, todoId);
   let modifiedTodo = todoHtml.replace(TODO_TITLE, decrypt(todo.title));
   modifiedTodo = modifiedTodo.replace(DESCRIPTION, decrypt(todo.description));
   modifiedTodo = modifiedTodo.replace(TODO_ID, todoId + 1);
@@ -149,7 +167,8 @@ const serveSignUpPage = function(req, res) {
 
 const getTasks = function(req, res) {
   const { todoId } = JSON.parse(req.body);
-  const tasks = users.getTodo("user1", todoId).tasks;
+  const userId = sessions[req.headers.cookie];
+  const tasks = users.getTodo(userId, todoId).tasks;
   send(res, JSON.stringify(tasks));
 };
 
@@ -172,7 +191,8 @@ const openTodo = function(req, res) {
 
 const deleteTodo = function(req, res) {
   const titleId = readParameters(req.body).id;
-  users.deleteTodo("user1", titleId);
+  const userId = sessions[req.headers.cookie];
+  users.deleteTodo(userId, titleId);
   updateAccountsFile(users.accounts);
   redirect(res, "/dashboard");
 };
@@ -185,7 +205,8 @@ const deleteTodo = function(req, res) {
 
 const deleteItem = function(req, res) {
   const { itemId, todoId } = readParameters(req.body);
-  users.deleteItem("user1", +todoId, +itemId);
+  const userId = sessions[req.headers.cookie];
+  users.deleteItem(userId, +todoId, +itemId);
   updateAccountsFile(users.accounts);
   redirect(res, `/userTodo?todoId=${todoId}`);
 };
@@ -198,8 +219,9 @@ const deleteItem = function(req, res) {
 
 const toggleStatus = function(req, res) {
   const { taskId, todoId } = JSON.parse(req.body);
-  users.toggleStatus("user1", todoId, taskId);
-  const currentStatus = users.getStatus("user1", todoId, taskId);
+  const userId = sessions[req.headers.cookie];
+  users.toggleStatus(userId, todoId, taskId);
+  const currentStatus = users.getStatus(userId, todoId, taskId);
   updateAccountsFile(users.accounts);
   send(res, currentStatus.toString());
 };
@@ -279,12 +301,15 @@ const handleSignUp = function(req, res) {
 
 const editTask = function(req, res) {
   const { task, todoId, taskId } = readParameters(req.body);
-  users.editTask("user1", todoId, decrypt(task), taskId);
+  const userId = sessions[req.headers.cookie];
+  users.editTask(userId, todoId, decrypt(task), taskId);
   updateAccountsFile(users.accounts);
   redirect(res, `/userTodo?todoId=${todoId}`);
 };
 
 const users = new Users(readUserDetails());
+const sessions = readSessions();
+
 loadInstances();
 
 module.exports = {
@@ -306,5 +331,7 @@ module.exports = {
   getTasks,
   serveTodoPage,
   editTask,
-  users
+  users,
+  updateSessionsFile,
+  sessions
 };

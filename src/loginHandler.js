@@ -1,26 +1,12 @@
 const fs = require("fs");
 const {
-  SESSIONS_PATH,
   HOME_PAGE,
   UTF8,
   INVALID_PASSWORD
 } = require("./constants");
 const { redirect, readParameters, send, parseTitleId } = require("./appUtil");
-const { users, serveHomePage } = require("./appHandlers");
+const { users, serveHomePage, sessions, updateSessionsFile } = require("./appHandlers");
 const homePage = fs.readFileSync(HOME_PAGE, UTF8);
-
-const updateSessionsFile = function() {
-  fs.writeFile(SESSIONS_PATH, JSON.stringify(sessions), UTF8, () => {});
-};
-
-const readSessions = () => {
-  let sessions = fs.readFileSync(SESSIONS_PATH, UTF8);
-  if (sessions == "") {
-    sessions = JSON.stringify({});
-    updateSessionsFile();
-  }
-  return JSON.parse(sessions);
-};
 
 const serveErrorMessage = function(req, res) {
   let error = `Invalid userId or password`;
@@ -91,6 +77,6 @@ const handleLogout = function(req, res) {
   redirect(res, "/");
 };
 
-const sessions = readSessions();
+
 
 module.exports = { handleLogIn, checkCookies, handleLogout };

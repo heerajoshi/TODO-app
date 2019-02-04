@@ -1,5 +1,6 @@
 const express = require("express");
 const app = express();
+const bodyParser = require("body-parser");
 
 const {
   readBody,
@@ -24,6 +25,7 @@ const { handleLogIn, checkCookies, handleLogout } = require("./loginHandler");
 
 app.use(logRequest);
 app.use(readBody);
+// app.use(bodyParser.json());
 app.use(checkCookies);
 app.get("/", serveHomePage);
 app.post("/handleSignUp", handleSignUp);

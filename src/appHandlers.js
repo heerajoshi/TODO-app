@@ -1,4 +1,5 @@
 const fs = require("fs");
+const bodyParser = require("body-parser");
 const { Users } = require("./entities/users");
 const { TodoList } = require("./entities/todoList");
 const { Todo } = require("./entities/todo");
@@ -7,8 +8,6 @@ const { readParameters, parseUrl, decrypt } = require("./appUtil");
 const {
   USER_ACCOUNTS_FILE,
   FILE_NOT_FOUND_STATUS,
-  INDEX_FILE,
-  URL_PREFIX,
   TODO_TEMPLATE,
   HOME_PAGE,
   DASHBOARD_TEMPLATE,
@@ -275,7 +274,7 @@ const serveSignUpError = function(req, res) {
     EXISTING_USER_REGEXP,
     EXISTING_USER_MESSAGE
   );
-  res.status(200).send(modifiedSignUpPage);
+  res.send(modifiedSignUpPage);
 };
 
 const handleSignUp = function(req, res) {

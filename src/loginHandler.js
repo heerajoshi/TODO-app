@@ -39,13 +39,14 @@ const handleLogIn = function(req, res) {
   serveErrorMessage(req, res);
 };
 
-const urls = ["/",
- "/styleSheet.css",
- "/favicon.ico",
- "/login",
- "/signUp",
- "/handleSignUp"]
-
+const urls = [
+  "/",
+  "/styleSheet.css",
+  "/favicon.ico",
+  "/login",
+  "/signUp",
+  "/handleSignUp"
+];
 
 const isUserLoggedIn = function(reqCookie, url) {
   return sessions[reqCookie] || urls.includes(url);

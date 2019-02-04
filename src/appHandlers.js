@@ -265,17 +265,6 @@ const getFilePath = function(url) {
  * @param {object} res - http response.
  */
 
-const serveFile = function(req, res) {
-  const filePath = getFilePath(req.url);
-  fs.readFile(filePath, (err, content) => {
-    if (err) {
-      send(res, "File Not found", FILE_NOT_FOUND_STATUS);
-      return;
-    }
-    send(res, content);
-  });
-};
-
 /**
  * Logs the req's url and method.
  * @param {object} req - http request.
@@ -302,7 +291,7 @@ const serveSignUpError = function(req, res) {
     EXISTING_USER_REGEXP,
     EXISTING_USER_MESSAGE
   );
-  send(res, modifiedSignUpPage);
+  res.status(200).send(modifiedSignUpPage);
 };
 
 const handleSignUp = function(req, res) {
@@ -333,7 +322,6 @@ loadInstances();
 
 module.exports = {
   readBody,
-  serveFile,
   logRequest,
   updateAccountsFile,
   handleSignUp,

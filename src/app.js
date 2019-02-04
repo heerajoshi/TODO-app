@@ -3,7 +3,6 @@ const app = express();
 
 const {
   readBody,
-  serveFile,
   logRequest,
   handleSignUp,
   serveDashBoard,
@@ -31,7 +30,7 @@ app.post("/handleSignUp", handleSignUp);
 app.get("/todoList", serveTodoTitles);
 app.get("/signUp", serveSignUpPage);
 app.get("/dashboard", serveDashBoard);
-app.get("/userTodo\?/", serveTodoPage);
+app.get("/userTodo?/", serveTodoPage);
 app.post("/logout", handleLogout);
 app.post("/login", handleLogIn);
 app.post("/addTask", addTask);
@@ -42,6 +41,6 @@ app.post("/deleteItem", deleteItem);
 app.post("/toggleStatus", toggleStatus);
 app.post("/getTasks", getTasks);
 app.post("/editTask", editTask);
-app.use(serveFile);
+app.use(express.static("./public"));
 
 module.exports = app;

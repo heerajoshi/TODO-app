@@ -2,13 +2,8 @@ const fs = require("fs");
 const { Users } = require("./entities/users");
 const { TodoList } = require("./entities/todoList");
 const { Todo } = require("./entities/todo");
-const {
-  send,
-  readParameters,
-  redirect,
-  parseUrl,
-  decrypt
-} = require("./appUtil");
+const { send, readParameters, parseUrl, decrypt } = require("./appUtil");
+
 const {
   USER_ACCOUNTS_FILE,
   FILE_NOT_FOUND_STATUS,
@@ -84,7 +79,7 @@ const addTodo = function(req, res) {
   users.addTodo(userId, todo);
   updateAccountsFile(users.accounts);
   const newTodoId = users.getTodoList(userId).length - 1;
-  redirect(res, `/userTodo?todoId=${newTodoId}`);
+  res.redirect(`/userTodo?todoId=${newTodoId}`);
 };
 
 /**
@@ -133,7 +128,7 @@ const serveTodoTitles = function(req, res) {
 const serveHomePage = function(req, res) {
   const reqCookie = req.headers.cookie;
   if (sessions[reqCookie]) {
-    redirect(res, "/dashboard");
+    res.redirect("/dashboard");
     return;
   }
   let renderedHomePage = homePage.replace(INVALID_PASSWORD, "");
@@ -156,7 +151,7 @@ const serveTodoPage = function(req, res) {
   }
   let modifiedTodo = todoHtml.replace(TODO_TITLE, decrypt(todo.title));
   modifiedTodo = modifiedTodo.replace(DESCRIPTION, decrypt(todo.description));
-  modifiedTodo = modifiedTodo.replace(TODO_ID, todoId + 1);
+  modifiedTodo = modifiedTodo.replace(TODO_ID, +todoId + 1);
   send(res, modifiedTodo);
 };
 
@@ -192,7 +187,7 @@ const getTasks = function(req, res) {
 
 const openTodo = function(req, res) {
   const todoId = readParameters(req.body).id;
-  redirect(res, `/userTodo?todoId=${todoId}`);
+  res.redirect(`/userTodo?todoId=${todoId}`);
 };
 
 /**
@@ -206,7 +201,7 @@ const deleteTodo = function(req, res) {
   const userId = sessions[req.headers.cookie];
   users.deleteTodo(userId, titleId);
   updateAccountsFile(users.accounts);
-  redirect(res, "/dashboard");
+  res.redirect("/dashboard");
 };
 
 /**
@@ -220,7 +215,7 @@ const deleteItem = function(req, res) {
   const userId = sessions[req.headers.cookie];
   users.deleteItem(userId, +todoId, +itemId);
   updateAccountsFile(users.accounts);
-  redirect(res, `/userTodo?todoId=${todoId}`);
+  res.redirect(`/userTodo?todoId=${todoId}`);
 };
 
 /**
@@ -320,7 +315,7 @@ const handleSignUp = function(req, res) {
   }
   users.addUser(newUser, todoList);
   updateAccountsFile(users.accounts);
-  redirect(res, "/");
+  res.redirect("/");
 };
 
 const editTask = function(req, res) {
@@ -328,7 +323,7 @@ const editTask = function(req, res) {
   const userId = sessions[req.headers.cookie];
   users.editTask(userId, todoId, decrypt(task), taskId);
   updateAccountsFile(users.accounts);
-  redirect(res, `/userTodo?todoId=${todoId}`);
+  res.redirect(`/userTodo?todoId=${todoId}`);
 };
 
 const users = new Users(readUserDetails());

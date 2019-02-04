@@ -1,4 +1,6 @@
-const { ReqSequenceHandler } = require("./express");
+const express = require("express");
+const app = express();
+
 const {
   readBody,
   serveFile,
@@ -21,8 +23,6 @@ const {
 
 const { handleLogIn, checkCookies, handleLogout } = require("./loginHandler");
 
-const app = new ReqSequenceHandler();
-
 app.use(logRequest);
 app.use(readBody);
 app.use(checkCookies);
@@ -31,7 +31,7 @@ app.post("/handleSignUp", handleSignUp);
 app.get("/todoList", serveTodoTitles);
 app.get("/signUp", serveSignUpPage);
 app.get("/dashboard", serveDashBoard);
-app.get(/\/userTodo\?/, serveTodoPage);
+app.get("/userTodo\?/", serveTodoPage);
 app.post("/logout", handleLogout);
 app.post("/login", handleLogIn);
 app.post("/addTask", addTask);
@@ -44,4 +44,4 @@ app.post("/getTasks", getTasks);
 app.post("/editTask", editTask);
 app.use(serveFile);
 
-module.exports = app.handleRequest.bind(app);
+module.exports = app;

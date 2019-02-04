@@ -1,0 +1,82 @@
+html,
+body {
+  height: 100%;
+  margin: 0px;
+  font-family: "Open Sans", sans-serif;
+}
+
+.error {
+  color: red;
+  height: 30px;
+  width: 100%;
+  background: black;
+  font-family: inherit;
+}
+
+.loginButton {
+  height: 35px;
+  width: 250px;
+  font-size: 20px;
+
+  border-radius: 15px;
+  cursor: pointer;
+}
+
+.loginDiv {
+  width: 400px;
+  height: 500px;
+  border-radius: 2%;
+  border: 1px solid black;
+
+  display: flex;
+  flex-direction: column;
+
+  align-items: center;
+  justify-content: space-between;
+
+  font-family: inherit;
+}
+
+form {
+  height: 50%;
+  width: 100%;
+
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  /* justify-content: space-between; */
+
+  font-family: inherit;
+}
+
+.newUser {
+}
+
+.textBox {
+  width: 90%;
+  height: 20px;
+
+  font-family: inherit;
+  border: none;
+  border-bottom: 1px solid black;
+}
+
+header {
+  height: 7%;
+  background-color: grey;
+}
+
+section {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  font-family: inherit;
+  height: 80%;
+  margin: 0px, 0px;
+}
+
+footer {
+  height: 13%;
+  background-color: grey;
+}

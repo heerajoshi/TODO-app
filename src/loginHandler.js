@@ -12,7 +12,7 @@ const homePage = fs.readFileSync(HOME_PAGE, UTF8);
 const serveErrorMessage = function(req, res) {
   let error = `Invalid userId or password`;
   let renderedHomePage = homePage.replace(INVALID_PASSWORD, error);
-  send(res, renderedHomePage);
+  res.send(renderedHomePage);
 };
 
 const addSession = function(userId, cookie) {
@@ -28,7 +28,7 @@ const renderHomePage = function(res, userId) {
   const cookie = new Date().getTime();
   addSession(userId, cookie);
   res.setHeader("Set-Cookie", `${cookie}`);
-  redirect(res, "/dashboard");
+  res.redirect("/dashboard");
 };
 
 const handleLogIn = function(req, res) {
@@ -39,22 +39,16 @@ const handleLogIn = function(req, res) {
   serveErrorMessage(req, res);
 };
 
-const isLoginPageReq = url => {
-  console.log(url, "cooki");
-  return (
-    url == "/" ||
-    url == "/styleSheet.css" ||
-    url == "/favicon.ico" ||
-    url == "/login"
-  );
-};
+const urls = ["/",
+ "/styleSheet.css",
+ "/favicon.ico",
+ "/login",
+ "/signUp",
+ "/handleSignUp"]
 
-const isSignupReq = function(url) {
-  return url == "/signUp" || url == "/handleSignUp";
-};
 
 const isUserLoggedIn = function(reqCookie, url) {
-  return sessions[reqCookie] || isLoginPageReq(url) || isSignupReq(url);
+  return sessions[reqCookie] || urls.includes(url);
 };
 
 const checkCookies = function(req, res, next) {
@@ -63,7 +57,7 @@ const checkCookies = function(req, res, next) {
     next();
     return;
   }
-  redirect(res, "/");
+  res.redirect("/");
 };
 
 const deleteSession = function(sessionId) {
@@ -75,7 +69,7 @@ const handleLogout = function(req, res) {
   deleteSession(req.headers.cookie);
   const expiryDate = new Date().toUTCString();
   res.setHeader("Set-Cookie", `session=;expires=${expiryDate}`);
-  redirect(res, "/");
+  res.redirect("/");
 };
 
 module.exports = { handleLogIn, checkCookies, handleLogout };

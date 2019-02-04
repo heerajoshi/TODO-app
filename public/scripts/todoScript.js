@@ -139,6 +139,7 @@ const updateItemsDiv = function(items) {
 const updateTodo = function() {
   const task = document.getElementById("item").value;
   const todoId = document.getElementById("todoId").innerHTML - 1;
+  console.log(todoId);
   fetch(`/addTask`, { method: "POST", body: JSON.stringify({ task, todoId }) })
     .then(response => response.text())
     .then(updateItemsDiv);

@@ -5,18 +5,6 @@ const isMatching = (req, route) => {
   return true;
 };
 
-const send = (res, content, statusCode = 200) => {
-  res.write(content);
-  res.statusCode = statusCode;
-  res.end();
-};
-
-const redirect = function(res, url) {
-  res.setHeader("location", url);
-  res.statusCode = 302;
-  res.end();
-};
-
 const readParameters = parameters => {
   let args = {};
   const splitKeyValue = pair => pair.split("=");
@@ -40,10 +28,8 @@ const decrypt = data => {
 
 module.exports = {
   isMatching,
-  send,
   readParameters,
   parseUrl,
-  redirect,
   parseUrl,
   decrypt
 };

@@ -2,7 +2,7 @@ const fs = require("fs");
 const { Users } = require("./entities/users");
 const { TodoList } = require("./entities/todoList");
 const { Todo } = require("./entities/todo");
-const { send, readParameters, parseUrl, decrypt } = require("./appUtil");
+const { readParameters, parseUrl, decrypt } = require("./appUtil");
 
 const {
   USER_ACCOUNTS_FILE,
@@ -94,7 +94,7 @@ const addTask = function(req, res) {
   users.addTask(userId, todoId, decrypt(task));
   const currentTasks = users.getTodo(userId, todoId).tasks;
   updateAccountsFile(users.accounts);
-  send(res, JSON.stringify(currentTasks));
+  res.send(JSON.stringify(currentTasks));
 };
 
 /**
@@ -104,7 +104,7 @@ const addTask = function(req, res) {
  */
 
 const serveDashBoard = function(req, res) {
-  send(res, userDashBoard);
+  res.send(userDashBoard);
 };
 
 /**
@@ -116,7 +116,7 @@ const serveDashBoard = function(req, res) {
 const serveTodoTitles = function(req, res) {
   const userId = sessions[req.headers.cookie];
   const todoList = users.getTodoList(userId);
-  send(res, JSON.stringify(todoList));
+  res.send(JSON.stringify(todoList));
 };
 
 /**
@@ -132,7 +132,7 @@ const serveHomePage = function(req, res) {
     return;
   }
   let renderedHomePage = homePage.replace(INVALID_PASSWORD, "");
-  send(res, renderedHomePage);
+  res.send(renderedHomePage);
 };
 
 /**
@@ -146,13 +146,13 @@ const serveTodoPage = function(req, res) {
   const userId = sessions[req.headers.cookie];
   const todo = users.getTodo(userId, todoId);
   if (!todo) {
-    send(res, "Invalid Request", 404);
+    res.status(404).send("Invalid Request");
     return;
   }
   let modifiedTodo = todoHtml.replace(TODO_TITLE, decrypt(todo.title));
   modifiedTodo = modifiedTodo.replace(DESCRIPTION, decrypt(todo.description));
   modifiedTodo = modifiedTodo.replace(TODO_ID, +todoId + 1);
-  send(res, modifiedTodo);
+  res.send(modifiedTodo);
 };
 
 /**
@@ -163,7 +163,7 @@ const serveTodoPage = function(req, res) {
 
 const serveSignUpPage = function(req, res) {
   let modifiedSignUpPage = signupPage.replace(EXISTING_USER_REGEXP, "");
-  send(res, modifiedSignUpPage);
+  res.send(modifiedSignUpPage);
 };
 
 /**
@@ -176,7 +176,7 @@ const getTasks = function(req, res) {
   const { todoId } = JSON.parse(req.body);
   const userId = sessions[req.headers.cookie];
   const tasks = users.getTodo(userId, todoId).tasks;
-  send(res, JSON.stringify(tasks));
+  res.send(JSON.stringify(tasks));
 };
 
 /**
@@ -230,7 +230,7 @@ const toggleStatus = function(req, res) {
   users.toggleStatus(userId, todoId, taskId);
   const currentStatus = users.getStatus(userId, todoId, taskId);
   updateAccountsFile(users.accounts);
-  send(res, currentStatus.toString());
+  res.send(currentStatus.toString());
 };
 
 /**
@@ -248,22 +248,6 @@ const readBody = (req, res, next) => {
     next();
   });
 };
-
-/**
- *Provide the file path by appending the directory prefix with url.
- * @param {string} url - url of http request
- */
-
-const getFilePath = function(url) {
-  if (url == "/") return INDEX_FILE;
-  return URL_PREFIX + url;
-};
-
-/**
- * Serves the file as per the http request url.
- * @param {object} req - http request.
- * @param {object} res - http response.
- */
 
 /**
  * Logs the req's url and method.

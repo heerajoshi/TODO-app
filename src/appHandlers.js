@@ -1,5 +1,4 @@
 const fs = require("fs");
-const bodyParser = require("body-parser");
 const { Users } = require("./entities/users");
 const { TodoList } = require("./entities/todoList");
 const { Todo } = require("./entities/todo");
@@ -74,7 +73,7 @@ const addTodo = function(req, res) {
     description: decrypt(description)
   };
   const todo = new Todo(todoDetails);
-  const userId = sessions[req.headers.cookie];
+  const userId = sessions[req.cookies.sessionId];
   users.addTodo(userId, todo);
   updateAccountsFile(users.accounts);
   const newTodoId = users.getTodoList(userId).length - 1;
@@ -89,7 +88,7 @@ const addTodo = function(req, res) {
 
 const addTask = function(req, res) {
   const { task, todoId } = JSON.parse(req.body);
-  const userId = sessions[req.headers.cookie];
+  const userId = sessions[req.cookies.sessionId];
   users.addTask(userId, todoId, decrypt(task));
   const currentTasks = users.getTodo(userId, todoId).tasks;
   updateAccountsFile(users.accounts);
@@ -113,7 +112,7 @@ const serveDashBoard = function(req, res) {
  */
 
 const serveTodoTitles = function(req, res) {
-  const userId = sessions[req.headers.cookie];
+  const userId = sessions[req.cookies.sessionId];
   const todoList = users.getTodoList(userId);
   res.send(JSON.stringify(todoList));
 };
@@ -125,7 +124,7 @@ const serveTodoTitles = function(req, res) {
  */
 
 const serveHomePage = function(req, res) {
-  const reqCookie = req.headers.cookie;
+  const reqCookie = req.cookies.sessionId;
   if (sessions[reqCookie]) {
     res.redirect("/dashboard");
     return;
@@ -142,7 +141,7 @@ const serveHomePage = function(req, res) {
 
 const serveTodoPage = function(req, res) {
   const { todoId } = parseUrl(req.url);
-  const userId = sessions[req.headers.cookie];
+  const userId = sessions[req.cookies.sessionId];
   const todo = users.getTodo(userId, todoId);
   if (!todo) {
     res.status(404).send("Invalid Request");
@@ -173,7 +172,7 @@ const serveSignUpPage = function(req, res) {
 
 const getTasks = function(req, res) {
   const { todoId } = JSON.parse(req.body);
-  const userId = sessions[req.headers.cookie];
+  const userId = sessions[req.cookies.sessionId];
   const tasks = users.getTodo(userId, todoId).tasks;
   res.send(JSON.stringify(tasks));
 };
@@ -197,7 +196,7 @@ const openTodo = function(req, res) {
 
 const deleteTodo = function(req, res) {
   const titleId = readParameters(req.body).id;
-  const userId = sessions[req.headers.cookie];
+  const userId = sessions[req.cookies.sessionId];
   users.deleteTodo(userId, titleId);
   updateAccountsFile(users.accounts);
   res.redirect("/dashboard");
@@ -211,7 +210,7 @@ const deleteTodo = function(req, res) {
 
 const deleteItem = function(req, res) {
   const { itemId, todoId } = readParameters(req.body);
-  const userId = sessions[req.headers.cookie];
+  const userId = sessions[req.cookies.sessionId];
   users.deleteItem(userId, +todoId, +itemId);
   updateAccountsFile(users.accounts);
   res.redirect(`/userTodo?todoId=${todoId}`);
@@ -225,9 +224,10 @@ const deleteItem = function(req, res) {
 
 const toggleStatus = function(req, res) {
   const { taskId, todoId } = JSON.parse(req.body);
-  const userId = sessions[req.headers.cookie];
+  const userId = sessions[req.cookies.sessionId];
   users.toggleStatus(userId, todoId, taskId);
   const currentStatus = users.getStatus(userId, todoId, taskId);
+
   updateAccountsFile(users.accounts);
   res.send(currentStatus.toString());
 };
@@ -292,7 +292,7 @@ const handleSignUp = function(req, res) {
 
 const editTask = function(req, res) {
   const { task, todoId, taskId } = readParameters(req.body);
-  const userId = sessions[req.headers.cookie];
+  const userId = sessions[req.cookies.sessionId];
   users.editTask(userId, todoId, decrypt(task), taskId);
   updateAccountsFile(users.accounts);
   res.redirect(`/userTodo?todoId=${todoId}`);

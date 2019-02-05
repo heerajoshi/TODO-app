@@ -27,7 +27,7 @@ const addSession = function(userId, cookie) {
 const renderHomePage = function(res, userId) {
   const cookie = new Date().getTime();
   addSession(userId, cookie);
-  res.setHeader("Set-Cookie", `${cookie}`);
+  res.cookie(`sessionId`, `${cookie}`);
   res.redirect("/dashboard");
 };
 
@@ -53,7 +53,7 @@ const isUserLoggedIn = function(reqCookie, url) {
 };
 
 const checkCookies = function(req, res, next) {
-  const reqCookie = req.headers.cookie;
+  const reqCookie = req.cookies.sessionId;
   if (isUserLoggedIn(reqCookie, req.url)) {
     next();
     return;
@@ -67,7 +67,7 @@ const deleteSession = function(sessionId) {
 };
 
 const handleLogout = function(req, res) {
-  deleteSession(req.headers.cookie);
+  deleteSession(req.cookies.sessionId);
   const expiryDate = new Date().toUTCString();
   res.setHeader("Set-Cookie", `session=;expires=${expiryDate}`);
   res.redirect("/");

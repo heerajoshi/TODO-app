@@ -1,12 +1,7 @@
 const fs = require("fs");
 const { HOME_PAGE, UTF8, INVALID_PASSWORD } = require("./constants");
-const { redirect, readParameters, send, parseTitleId } = require("./appUtil");
-const {
-  users,
-  serveHomePage,
-  sessions,
-  updateSessionsFile
-} = require("./appHandlers");
+const { readParameters } = require("./appUtil");
+const { users, updateSessionsFile } = require("./appHandlers");
 const homePage = fs.readFileSync(HOME_PAGE, UTF8);
 
 const serveErrorMessage = function(req, res) {
@@ -15,7 +10,7 @@ const serveErrorMessage = function(req, res) {
   res.send(renderedHomePage);
 };
 
-const addSession = function(userId, cookie) {
+const addSession = function(userId, cookie, sessions) {
   sessions[cookie] = userId;
   fs.writeFile(
     "./private/sessions.json",
@@ -24,9 +19,9 @@ const addSession = function(userId, cookie) {
   );
 };
 
-const renderHomePage = function(res, userId) {
+const renderHomePage = function(req, res, userId) {
   const cookie = new Date().getTime();
-  addSession(userId, cookie);
+  addSession(userId, cookie, req.app.sessions);
   res.cookie(`sessionId`, `${cookie}`);
   res.redirect("/dashboard");
 };
@@ -34,7 +29,7 @@ const renderHomePage = function(res, userId) {
 const handleLogIn = function(req, res) {
   const newUser = readParameters(req.body);
   if (users.isUserValid(newUser)) {
-    return renderHomePage(res, newUser.userId);
+    return renderHomePage(req, res, newUser.userId);
   }
   serveErrorMessage(req, res);
 };
@@ -48,26 +43,26 @@ const urls = [
   "/handleSignUp"
 ];
 
-const isUserLoggedIn = function(reqCookie, url) {
+const isUserLoggedIn = function(reqCookie, url, sessions) {
   return sessions[reqCookie] || urls.includes(url);
 };
 
 const checkCookies = function(req, res, next) {
   const reqCookie = req.cookies.sessionId;
-  if (isUserLoggedIn(reqCookie, req.url)) {
+  if (isUserLoggedIn(reqCookie, req.url, req.app.sessions)) {
     next();
     return;
   }
   res.redirect("/");
 };
 
-const deleteSession = function(sessionId) {
+const deleteSession = function(sessions, sessionId) {
   delete sessions[sessionId];
-  updateSessionsFile();
+  updateSessionsFile(sessions);
 };
 
 const handleLogout = function(req, res) {
-  deleteSession(req.cookies.sessionId);
+  deleteSession(req.app.sessions, req.cookies.sessionId);
   const expiryDate = new Date().toUTCString();
   res.setHeader("Set-Cookie", `session=;expires=${expiryDate}`);
   res.redirect("/");

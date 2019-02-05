@@ -1,6 +1,5 @@
 const express = require("express");
 const app = express();
-const bodyParser = require("body-parser");
 const cookieParser = require("cookie-parser");
 
 const {
@@ -19,10 +18,12 @@ const {
   serveSignUpPage,
   getTasks,
   serveTodoPage,
-  editTask
+  editTask,
+  readSessions
 } = require("./appHandlers.js");
 
 const { handleLogIn, checkCookies, handleLogout } = require("./loginHandler");
+app.sessions = readSessions();
 
 app.use(logRequest);
 app.use(readBody);
